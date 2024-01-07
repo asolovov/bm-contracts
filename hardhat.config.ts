@@ -1,6 +1,7 @@
 import "@nomicfoundation/hardhat-toolbox";
+import { HardhatUserConfig } from "hardhat/config";
 
-module.exports = {
+const config: HardhatUserConfig = {
   solidity: "0.8.21",
   mocha: {
     timeout: 200000,
@@ -17,3 +18,5 @@ module.exports = {
     }
   },
 };
+
+export default config;

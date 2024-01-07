@@ -1,0 +1,80 @@
+
+export enum StatusType {
+    UNKNOWN,
+    BEFORE_SPELL,
+    MUTATE_SPELL,
+    END_TURN,
+    DEATH_CHECK
+}
+
+export enum SchoolType {
+    UNKNOWN,
+    AIR,
+    FIRE,
+    EARTH,
+    WATER,
+    RECOVERY,
+    TRANSFORMATION,
+    DARK_STUDIES,
+    ASTRAL_TECHNICS
+}
+
+export enum ActionCheckType {
+    UNKNOWN,
+    HEALTH_LESS,
+    HEALTH_MORE,
+    SHIELDS_LESS,
+    SHIELDS_MORE,
+    PASS,
+    STATUS,
+    NO_STATUS,
+    LUCK
+
+}
+
+export enum MutationCheckType {
+    UNKNOWN,
+    SPELL_SCHOOL,
+    SPELL_DAMAGE_TYPE,
+    SPELL_STATUS,
+    SPELL_DAMAGE_MORE,
+    SPELL_DAMAGE_LESS,
+    SHIELDS_LESS,
+    SHIELDS_MORE,
+    HEALTH_LESS,
+    HEALTH_MORE
+}
+
+export enum MutationType {
+    UNKNOWN,
+    INCREASE_DAMAGE,
+    DECREASE_DAMAGE,
+    CHANGE_DAMAGE_TYPE,
+    SET_DAMAGE,
+    SET_DAMAGE_TO_HP,
+    BLOCK_SHIELD_DAMAGE,
+    BLOCK_STATUS,
+    BLOCK_ALL_STATUSES
+}
+
+export enum DamageType {
+    UNKNOWN,
+    CLASSIC,
+    PIERCING,
+    SHIELD_BRAKING,
+    HEALING,
+    INCREASE_SHIELDS
+}
+
+export enum ActionType {
+    UNKNOWN,
+    DAMAGE,
+    ADD_STATUS,
+    BURN_STATUS,
+    CHANGE_STATUS,
+    BURN_ALL_STATUSES,
+    ADD_SPELL,
+    BURN_SPELL,
+    SET_SHIELDS,
+    SKIP_TURN
+}
