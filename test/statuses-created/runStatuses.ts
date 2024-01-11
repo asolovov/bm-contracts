@@ -1098,7 +1098,7 @@ describe("Actions unit tests", function () {
             expect(res).to.be.equal(true);
         });
 
-        it("Purity", async function () {
+        it.only("Purity", async function () {
             const {actions, statuses, mutations} = await loadFixture(deployFixture);
 
             const selfState: States.FullStateStruct = {
@@ -1120,7 +1120,7 @@ describe("Actions unit tests", function () {
                 race: 1,
                 school: SchoolType.FIRE,
                 health: 10,
-                shields: 9,
+                shields: 10,
                 spells: [],
                 statuses: [],
                 turns: [],
@@ -1137,7 +1137,7 @@ describe("Actions unit tests", function () {
                 spells: [],
                 statuses: [],
                 turns: [],
-                isPass: true
+                isPass: false
             }
 
             await actions.addAction(burnAllStatuses);

@@ -12,6 +12,7 @@ import {Target} from "../../utils/Target.sol";
 import {Random} from "../../utils/Random.sol";
 import {States} from "../../utils/States.sol";
 import {Effects} from "../../utils/Effects.sol";
+import "hardhat/console.sol";
 
 // ActionRegistry is an implementation for the IActions interface
 contract ActionRegistry is IActions, Ownable {
