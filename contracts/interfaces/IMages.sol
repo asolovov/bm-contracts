@@ -2,17 +2,10 @@
 pragma solidity ^0.8.21;
 
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import {Race} from "../utils/Race.sol";
-import {School} from "../utils/School.sol";
+ import {School} from "../utils/School.sol";
+import {States} from "../utils/States.sol";
 
 interface IMages is IERC721 {
-
-    struct Mage {
-        uint256 id;
-        string name;
-        Race.Type race;
-        School.Type school;
-    }
 
     function getNames() external view returns(string[] memory);
 
@@ -20,5 +13,5 @@ interface IMages is IERC721 {
 
     function createMage(string calldata name) external;
 
-    function getMage(uint256 id) external view returns(Mage memory);
+    function getMage(uint256 id) external view returns(States.Mage memory);
 }

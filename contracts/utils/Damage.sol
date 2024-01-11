@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import {MageState} from "./MageState.sol";
+import "./States.sol";
+import "./Effects.sol";
 
 // Damage is a library for running damage Actions. Library is implementing Damage effects on the Mage state.
 library Damage {
 
-    // TODO: do we need it here or else?
-    uint8 constant public maxHealth = 12;
-    uint8 constant public maxShields = 12;
+    struct MaxValues {
+        uint8 maxHealth;
+        uint8 maxShields;
+    }
 
     enum Type {
         UNKNOWN,
@@ -23,17 +25,29 @@ library Damage {
      * @dev _runDamage is used to mutate given mage state with given points and damage type. Can be called by the Actions
      * contract. Can be reverted if given damage type is Unknown
     */
-    function _runDamage(MageState.ShortState memory mage, uint8 points, Damage.Type damage) internal pure returns (MageState.ShortState memory) {
-        if (damage == Type.CLASSIC) {
-            return _runClassic(mage, points);
-        } else if (damage == Type.PIERCING) {
-            return _runPiercing(mage, points);
-        } else if (damage == Type.SHIELD_BRAKING) {
-            return _runShieldBraking(mage, points);
-        } else if (damage == Type.HEALING) {
-            return _runHealing(mage, points);
-        } else if (damage == Type.INCREASE_SHIELDS) {
-            return _runIncreaseShields(mage, points);
+    function _runDamage(
+        States.FullState memory mage,
+        Effects.ActionEffect calldata effect,
+        MaxValues memory maxValues
+    ) internal pure returns (States.FullState memory) {
+        if (effect.damageType == Type.CLASSIC) {
+            return _runClassic(mage, effect.points);
+        }
+
+        if (effect.damageType == Type.PIERCING) {
+            return _runPiercing(mage, effect.points);
+        }
+
+        if (effect.damageType == Type.SHIELD_BRAKING) {
+            return _runShieldBraking(mage, effect.points);
+        }
+
+        if (effect.damageType == Type.HEALING) {
+            return _runHealing(mage, effect.points, maxValues);
+        }
+
+        if (effect.damageType == Type.INCREASE_SHIELDS) {
+            return _runIncreaseShields(mage, effect.points, maxValues);
         }
 
         revert("Damage: damage cannot be unknown");
@@ -42,7 +56,7 @@ library Damage {
     /*
      * @dev _runClassic - classic damage first reduces the Mage shields and than reduces Mage health
     */
-    function _runClassic(MageState.ShortState memory mage, uint8 points) private pure returns (MageState.ShortState memory) {
+    function _runClassic(States.FullState memory mage, uint8 points) private pure returns (States.FullState memory) {
         if (mage.shields >= points) {
             mage.shields -= points;
         } else if (mage.shields > 0) {
@@ -61,7 +75,7 @@ library Damage {
     /*
      * @dev _runPiercing - piercing damage reduces the Mage health
     */
-    function _runPiercing(MageState.ShortState memory mage, uint8 points) private pure returns (MageState.ShortState memory) {
+    function _runPiercing(States.FullState memory mage, uint8 points) private pure returns (States.FullState memory) {
         if (mage.health <= points) {
             mage.health = 0;
         } else {
@@ -74,7 +88,10 @@ library Damage {
     /*
      * @dev _runShieldBraking - reduces only the Mage shields
     */
-    function _runShieldBraking(MageState.ShortState memory mage, uint8 points) private pure returns (MageState.ShortState memory) {
+    function _runShieldBraking(
+        States.FullState memory mage,
+        uint8 points
+    ) private pure returns (States.FullState memory) {
         if (mage.shields > points) {
             mage.shields -= points;
         } else if (mage.shields > 0) {
@@ -87,9 +104,13 @@ library Damage {
     /*
      * @dev _runShieldBraking - increases only the Mage health
     */
-    function _runHealing(MageState.ShortState memory mage, uint8 points) private pure returns (MageState.ShortState memory) {
-        if (mage.health + points >= maxHealth) {
-            mage.health = maxHealth;
+    function _runHealing(
+        States.FullState memory mage,
+        uint8 points,
+        MaxValues memory maxValues
+    ) private pure returns (States.FullState memory) {
+        if (mage.health + points >= maxValues.maxHealth) {
+            mage.health = maxValues.maxHealth;
         } else {
             mage.health += points;
         }
@@ -100,9 +121,13 @@ library Damage {
     /*
      * @dev _runIncreaseShields - increases only the Mage shields
     */
-    function _runIncreaseShields(MageState.ShortState memory mage, uint8 points) private pure returns (MageState.ShortState memory) {
-        if (mage.shields + points >= maxShields) {
-            mage.shields = maxShields;
+    function _runIncreaseShields(
+        States.FullState memory mage,
+        uint8 points,
+        MaxValues memory maxValues
+    ) private pure returns (States.FullState memory) {
+        if (mage.shields + points >= maxValues.maxShields) {
+            mage.shields = maxValues.maxShields;
         } else {
             mage.shields += points;
         }

@@ -4,8 +4,8 @@ pragma solidity ^0.8.21;
 import {Checks} from "../utils/Checks.sol";
 import {Damage} from "../utils/Damage.sol";
 import {School} from "../utils/School.sol";
-import {SpellState} from "../utils/SpellState.sol";
-import {MageState} from "../utils/MageState.sol";
+import "../utils/States.sol";
+import "../utils/Effects.sol";
 
 // IMutations is an Mutations module management contract. Mutations module is used by Spell module. Running the
 // Passive Status means to run all its mutations. Mutation can be used by several Statuses. Mutation mutates
@@ -81,8 +81,8 @@ interface IMutations {
     */
     function runMutation(
         uint256 id,
-        SpellState.ShortMageEffect memory spellState,
-        MageState.FullState memory mageState
-    ) external view returns (SpellState.ShortMageEffect memory);
+        Effects.ActionEffect memory spellState,
+        States.FullState calldata mageState
+    ) external view returns (Effects.ActionEffect memory);
 
 }

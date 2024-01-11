@@ -3,7 +3,7 @@ pragma solidity ^0.8.21;
 
 import {School} from "../utils/School.sol";
 import {Target} from "../utils/Target.sol";
-import {MageState} from "../utils/MageState.sol";
+import "../utils/States.sol";
 
 interface ISpells {
 
@@ -21,11 +21,14 @@ interface ISpells {
 
     function getSchoolSpells(School.Type school) external view returns(Spell[] memory);
 
-    function runSpell(
-        uint256 id,
-        Target.Type target,
-        MageState.FullState memory self,
-        MageState.FullState memory opponent
-    ) external view returns(MageState.FullState memory);
+    function runNextSpellSelf(
+        States.FullState memory self,
+        States.FullState calldata opponent
+    ) external view returns(States.FullState memory);
+
+    function runNextSpellOpponent(
+        States.FullState calldata self,
+        States.FullState memory opponent
+    ) external view returns(States.FullState memory);
 
 }

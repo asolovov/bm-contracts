@@ -2,9 +2,9 @@
 pragma solidity ^0.8.21;
 
 import {Damage} from "../utils/Damage.sol";
-import {MageState} from "../utils/MageState.sol";
 import {School} from "../utils/School.sol";
-import {SpellState} from "../utils/SpellState.sol";
+import "../utils/States.sol";
+import "../utils/Effects.sol";
 
 // IStatuses is an Status module management contract. Status is a affecting Mage or Spell state each turn if checks are
 // passed. Status can be burned or blocked by other Status and will burn when its life turns count will end. Status
@@ -18,8 +18,6 @@ interface IStatuses {
         BEFORE_SPELL,
         // Mutate Spell is used to run Status during Spell run stage. Also known as Passive Status
         MUTATE_SPELL,
-        // End Turn is used to run Status after Spell run stage TODO: do we need this?
-        END_TURN,
         // Death Check is used to run Status during the Death Checks at any stage
         DEATH_CHECK
     }
@@ -60,7 +58,7 @@ interface IStatuses {
      * AddStatus is used to add new status. Can be called only by contract owner or admin.
      * @param status - Status params to register
     */
-    function addStatus(Status memory status) external;
+    function addStatus(Status calldata status) external;
 
     /*
      * RunStatus is used to run Status by given Status ID for given states. Can be called by anyone. Can be reverted.
@@ -71,23 +69,26 @@ interface IStatuses {
      * @return mutated self Mage state
      * @return mutated Spell state
     */
-    function runStatus(
-        uint256 id,
-        MageState.FullState memory self,
-        MageState.FullState memory opponent,
-        SpellState.ShortMageEffect memory spell
-    ) external view returns (MageState.FullState memory, SpellState.ShortMageEffect memory);
 
-    /*
-     * RunOnDestroy is used to run Status On Destroy Actions. Can be called by anyone. Can be reverted.
-     * @param id - Status id
-     * @param self - self Mage state
-     * @param opponent - opponent Mage state
-     * @return mutated self Mage state
-    */
-    function runOnDestroy(
-        uint256 id,
-        MageState.FullState memory self,
-        MageState.FullState memory opponent
-    ) external view returns (MageState.FullState memory);
+    function runActiveStatuses(
+        States.FullState memory self,
+        States.FullState calldata opponent,
+        uint8 turn
+    ) external view returns (States.FullState memory);
+
+    function runPassiveStatuses(
+        States.FullState calldata self,
+        Effects.ActionEffect memory spellEffect
+    ) external view returns (Effects.ActionEffect memory);
+
+    function runDeathCheckStatuses(
+        States.FullState memory self,
+        uint8 turn
+    ) external view returns (States.FullState memory, bool);
+
+    function decreaseStatusTurns(
+        States.FullState memory self,
+        uint8 turn
+) external view returns(States.FullState memory);
+
 }

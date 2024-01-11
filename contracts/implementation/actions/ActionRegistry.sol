@@ -3,14 +3,15 @@ pragma solidity ^0.8.21;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-import {IActions} from "../../interface/IActions.sol";
+import {IActions} from "../../interfaces/IActions.sol";
 
 import {Checks} from "../../utils/Checks.sol";
 import {Damage} from "../../utils/Damage.sol";
 import {School} from "../../utils/School.sol";
-import {MageState} from "../../utils/MageState.sol";
 import {Target} from "../../utils/Target.sol";
 import {Random} from "../../utils/Random.sol";
+import {States} from "../../utils/States.sol";
+import {Effects} from "../../utils/Effects.sol";
 
 // ActionRegistry is an implementation for the IActions interface
 contract ActionRegistry is IActions, Ownable {
@@ -83,9 +84,10 @@ contract ActionRegistry is IActions, Ownable {
     function runAction(
         uint256 id,
         Target.Type target,
-        MageState.FullState memory self,
-        MageState.FullState memory opponent
-    ) external view returns (MageState.FullState memory targetState) {
+        States.FullState calldata self,
+        States.FullState calldata opponent
+    ) external view returns (Effects.ActionEffect memory effect, bool ok) {
+        States.FullState memory targetState;
         if (target == Target.Type.SELF) {
             targetState = self;
         } else {
@@ -94,59 +96,61 @@ contract ActionRegistry is IActions, Ownable {
 
         for (uint256 i = 0; i < _actions[id].selfChecks.length; i++) {
             if (!Checks._runActionCheck(self, _actions[id].selfChecks[i])) {
-                return targetState;
+                return (effect, false);
             }
         }
 
         for (uint256 i = 0; i < _actions[id].opponentChecks.length; i++) {
             if (!Checks._runActionCheck(opponent, _actions[id].opponentChecks[i])) {
-                return targetState;
+                return (effect, false);
             }
         }
 
-        return _runAction(id, targetState);
+        return _runAction(_actions[id], targetState);
     }
 
     /*
      * @dev will run Action for given Action ID and state. Can be reverted if given ID is unknown or for given ID Action
      * with Unknown type is registered. Will returned changed state.
     */
-    function _runAction(uint256 id, MageState.FullState memory state) private view returns(MageState.FullState memory) {
-        if(_actions[id].actionType == Type.DAMAGE) {
-            return _runDamage(id, state);
+    function _runAction(Action memory action, States.FullState memory state) private view returns(Effects.ActionEffect memory effect, bool ok) {
+        ok = true;
+
+        if(action.actionType == Type.DAMAGE) {
+            return _runDamage(action);
         }
 
-        if(_actions[id].actionType == Type.ADD_STATUS) {
-            return _addStatus(state, _actions[id].statusID);
+        if(action.actionType == Type.ADD_STATUS) {
+            return _addStatus(action);
         }
 
-        if(_actions[id].actionType == Type.BURN_STATUS) {
-            return _burnStatus(state, _actions[id].statusID);
+        if(action.actionType == Type.BURN_STATUS) {
+            return _burnStatus(action, state);
         }
 
-        if(_actions[id].actionType == Type.CHANGE_STATUS) {
-            return _runChangeStatus(id, state);
+        if(action.actionType == Type.CHANGE_STATUS) {
+            return _runChangeStatus(action, state);
         }
 
-        if(_actions[id].actionType == Type.BURN_ALL_STATUSES) {
-            state.statuses = new uint256[](0);
-            return state;
+        if(action.actionType == Type.BURN_ALL_STATUSES) {
+            effect.burnAllStatuses = state.statuses;
+            return (effect, ok);
         }
 
-        if(_actions[id].actionType == Type.ADD_SPELL) {
-            return _addSpell(id, state);
+        if(action.actionType == Type.ADD_SPELL) {
+            return _addSpell(action);
         }
 
-        if(_actions[id].actionType == Type.BURN_SPELL) {
-            return _burnSpell(state);
+        if(action.actionType == Type.BURN_SPELL) {
+            return _burnSpell(action, state);
         }
 
-        if(_actions[id].actionType == Type.SET_SHIELDS) {
-            return _setShields(id, state);
+        if(action.actionType == Type.SET_SHIELDS) {
+            return _setShields(action);
         }
 
-        if(_actions[id].actionType == Type.SKIP_TURN) {
-            return _skipTurn(state);
+        if(action.actionType == Type.SKIP_TURN) {
+            return _skipTurn();
         }
 
         revert("Actions: action type cannot be unknown");
@@ -164,111 +168,93 @@ contract ActionRegistry is IActions, Ownable {
     /*
      * @dev is used to run Damage type Actions
     */
-    function _runDamage(uint256 id, MageState.FullState memory state) private view returns (MageState.FullState memory) {
-        MageState.ShortState memory res = Damage._runDamage(
-            MageState.ShortState(state.health, state.shields, state.spells.length),
-            _getPoints(_actions[id].points, _actions[id].description),
-            _actions[id].damage
-        );
+    function _runDamage(Action memory action) private view returns (Effects.ActionEffect memory effect, bool ok) {
+        effect.points = _getPoints(action.points, action.description);
+        effect.damageSchool = action.school;
+        effect.damageType = action.damage;
 
-        state.shields = res.shields;
-        state.health = res.health;
-
-        return state;
+        return (effect, true);
     }
 
     /*
      * @dev is used to run Change Status type Actions
     */
-    function _runChangeStatus(uint256 id, MageState.FullState memory state) private view returns (MageState.FullState memory) {
+    function _runChangeStatus(Action memory action, States.FullState memory state) private view returns (Effects.ActionEffect memory effect, bool ok) {
         if (state.statuses.length > 0) {
-            state = _burnStatus(state, state.statuses[0]);
-            state = _addStatus(state, _actions[id].statusID);
+            effect.addStatus = action.statusID;
+            effect.changeStatus = true;
+            effect.burnStatus = state.statuses[Random._getRandom(action.description, state.statuses.length)-1];
+            ok = true;
         }
 
-        return state;
+        return (effect, ok);
     }
 
     /*
      * @dev is used to run Add Spell type Actions
     */
-    function _addSpell(uint256 id, MageState.FullState memory state) private view returns (MageState.FullState memory) {
-        uint256[] memory spells = new uint256[](state.spells.length + 1);
-        for (uint256 i = 0; i < state.spells.length; i++) {
-            spells[i] = state.spells[i];
-        }
-        spells[state.spells.length] = _actions[id].spellID;
-        state.spells = spells;
+    function _addSpell(Action memory action) private pure returns (Effects.ActionEffect memory effect, bool ok) {
+        effect.addSpell = action.spellID;
 
-        return state;
+        return (effect, true);
     }
 
     /*
      * @dev is used to run Burn Spell type Actions
     */
-    function _burnSpell(MageState.FullState memory state) private pure returns (MageState.FullState memory) {
+    function _burnSpell(Action memory action, States.FullState memory state) private view returns (Effects.ActionEffect memory effect, bool ok) {
         if (state.spells.length > 0) {
-            state.spells[state.spells.length - 1] = 0;
+            effect.burnSpell = state.spells[Random._getRandom(action.description, state.spells.length)-1];
+            ok = true;
         }
 
-        return state;
+        return (effect, ok);
     }
 
     /*
      * @dev is used to run Set Shields type Actions
     */
-    function _setShields(uint256 id, MageState.FullState memory state) private view returns (MageState.FullState memory) {
-        state.shields = _getPoints(_actions[id].points, _actions[id].description);
+    function _setShields(Action memory action) private view returns (Effects.ActionEffect memory effect, bool ok) {
+        effect.points = _getPoints(action.points, action.description);
+        effect.setShields = true;
 
-        return state;
+        return (effect, true);
     }
 
     /*
      * @dev is used to run Skip Turn type Actions
     */
-    function _skipTurn(MageState.FullState memory state) private pure returns (MageState.FullState memory) {
-        state.isPass = true;
+    function _skipTurn() private pure returns (Effects.ActionEffect memory effect, bool ok) {
+        effect.skip = true;
 
-        return state;
+        return (effect, true);
     }
 
     /*
      * @dev is used to run Burn Status type Actions
     */
-    function _burnStatus(MageState.FullState memory state, uint256 statusID) private pure returns (MageState.FullState memory) {
-        if (_isStatusInState(state, statusID)) {
-            uint256[] memory stats = new uint256[](state.statuses.length - 1);
-
-            for (uint256 i = 0; i < state.statuses.length; i++) {
-                if (state.statuses[i] != statusID) {
-                    stats[i] = state.statuses[i];
-                }
-            }
-
-            state.statuses = stats;
+    function _burnStatus(Action memory action, States.FullState memory state) private pure returns (Effects.ActionEffect memory effect, bool ok) {
+        if (_isStatusInState(state, action.statusID)) {
+            effect.burnStatus = action.statusID;
+            ok = true;
         }
 
-        return state;
+        return (effect, ok);
     }
 
     /*
      * @dev is used to run Add Status type Actions
     */
-    function _addStatus(MageState.FullState memory state, uint256 statusID) private pure returns (MageState.FullState memory) {
-        uint256[] memory stats = new uint256[](state.statuses.length + 1);
-        for (uint256 i = 0; i < state.statuses.length; i++) {
-            stats[i] = state.statuses[i];
-        }
-        stats[state.statuses.length] = statusID;
-        state.statuses = stats;
+    function _addStatus(Action memory action) private pure returns (Effects.ActionEffect memory effect, bool ok) {
+        effect.addStatus = action.statusID;
 
-        return state;
+        return (effect, true);
     }
 
     /*
      * @dev is used to check if given Status ID is in given state
     */
-    function _isStatusInState(MageState.FullState memory state, uint256 statusID) private pure returns (bool) {
+    function _isStatusInState(States.FullState memory state, uint256 statusID) private pure returns (bool) {
         for (uint256 i = 0; i < state.statuses.length; i++) {
             if (state.statuses[i] == statusID) {
                 return true;

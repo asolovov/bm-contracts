@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.12;
 
-import {MageState} from "./MageState.sol";
 import {School} from "./School.sol";
 import {Damage} from "./Damage.sol";
-import {SpellState} from "./SpellState.sol";
+import "./Effects.sol";
+import "./States.sol";
 
 // Checks is a library for running Actions and Mutation checks. Check is used to check Spell or Mage state before
 // running Actions or Mutations. If check failed, Action or Mutation will not run. Check are registered with the Action
@@ -72,23 +72,23 @@ library Checks {
     */
     function _runMutationCheck(
         // Received from the game
-        MageState.FullState memory mage,
-        SpellState.ShortMageEffect memory spell,
+        States.FullState memory mage,
+        Effects.ActionEffect memory spell,
 
         // Received from the check struct
         MutationCheck memory check
     ) internal pure returns (bool) {
 
         if (check.checkType == MutationChecks.SPELL_SCHOOL) {
-            return spell.school == check.damageSchool;
+            return spell.damageSchool == check.damageSchool;
         }
 
         if (check.checkType == MutationChecks.SPELL_DAMAGE_TYPE) {
-            return spell.damage == check.damageType;
+            return spell.damageType == check.damageType;
         }
 
         if (check.checkType == MutationChecks.SPELL_STATUS) {
-            return _checkStatus(spell.statuses, check.statusID);
+            return spell.addStatus == check.statusID;
         }
 
         if (check.checkType == MutationChecks.SPELL_DAMAGE_MORE) {
@@ -122,7 +122,7 @@ library Checks {
      * @dev _runActionCheck is used to run action check. Used by the Actions contract. Can be reverted if
      * Check type is Unknown
     */
-    function _runActionCheck(MageState.FullState memory mage, ActionCheck memory check) internal view returns (bool) {
+    function _runActionCheck(States.FullState memory mage, ActionCheck memory check) internal view returns (bool) {
 
         if(check.checkType == ActionChecks.HEALTH_LESS) {
             return mage.health < check.points;

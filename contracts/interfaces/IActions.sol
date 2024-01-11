@@ -3,9 +3,10 @@ pragma solidity ^0.8.21;
 
 import {Checks} from "../utils/Checks.sol";
 import {Damage} from "../utils/Damage.sol";
-import {MageState} from "../utils/MageState.sol";
 import {Target} from "../utils/Target.sol";
 import {School} from "../utils/School.sol";
+import {States} from "../utils/States.sol";
+import {Effects} from "../utils/Effects.sol";
 
 // IActions is an Actions module management contract. Actions module is used by Spell and Status modules. Running the
 // Spell or Status means to run all its actions. Action can be used by several Spells or Statuses. Action mutates
@@ -95,8 +96,8 @@ interface IActions {
     function runAction(
         uint256 id,
         Target.Type target,
-        MageState.FullState memory self,
-        MageState.FullState memory opponent
-    ) external view returns (MageState.FullState memory);
+        States.FullState calldata self,
+        States.FullState calldata opponent
+    ) external view returns (Effects.ActionEffect memory effect, bool ok);
 
 }
