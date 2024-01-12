@@ -1885,7 +1885,7 @@ describe("Actions unit tests", function () {
             assertMageStatus(selfStateRes, expectedState);
         });
 
-        it.only("What is Dead May Never Die", async function () {
+        it("What is Dead May Never Die", async function () {
             const {actions, statuses, mutations} = await loadFixture(deployFixture);
 
             const selfState: States.FullStateStruct = {
