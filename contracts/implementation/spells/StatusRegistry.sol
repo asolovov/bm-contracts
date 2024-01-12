@@ -77,7 +77,7 @@ contract StatusRegistry is IStatuses, Ownable {
 
                 for (uint256 a = 0; a < _statuses[self.statuses[s]].actions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[s]].actions[a], Target.Type.SELF, self, opponent
+                        _statuses[self.statuses[s]].actions[a], Target.Type.SELF, self, opponent, self.statuses[s]
                     );
 
                     if (ok) {
@@ -122,7 +122,7 @@ contract StatusRegistry is IStatuses, Ownable {
             if (_statuses[self.statuses[s]].statusType == Type.DEATH_CHECK) {
                 for (uint256 a = 0; a < _statuses[self.statuses[s]].onDestroyActions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[s]].onDestroyActions[a], Target.Type.SELF, self, self
+                        _statuses[self.statuses[s]].onDestroyActions[a], Target.Type.SELF, self, self, self.statuses[s]
                     );
 
                     if (ok) {
@@ -158,7 +158,7 @@ contract StatusRegistry is IStatuses, Ownable {
 
                 for (uint256 a = 0; a < _statuses[self.statuses[t]].onDestroyActions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[t]].onDestroyActions[a], Target.Type.SELF, self, self
+                        _statuses[self.statuses[t]].onDestroyActions[a], Target.Type.SELF, self, self, self.statuses[t]
                     );
 
                     if (ok) {

@@ -1110,7 +1110,7 @@ describe("Actions unit tests", function () {
                 shields: 10,
                 spells: [],
                 statuses: [1, 2, 3, 4],
-                turns: [3, 3, 3, 3],
+                turns: [4, 3, 2, 1],
                 isPass: false
             }
 
@@ -1135,8 +1135,8 @@ describe("Actions unit tests", function () {
                 health: 10,
                 shields: 10,
                 spells: [],
-                statuses: [],
-                turns: [],
+                statuses: [1],
+                turns: [4],
                 isPass: false
             }
 

@@ -86,7 +86,8 @@ contract ActionRegistry is IActions, Ownable {
         uint256 id,
         Target.Type target,
         States.FullState calldata self,
-        States.FullState calldata opponent
+        States.FullState calldata opponent,
+        uint256 thisStatusID
     ) external view returns (Effects.ActionEffect memory effect, bool ok) {
         States.FullState memory targetState;
         if (target == Target.Type.SELF) {
@@ -107,14 +108,18 @@ contract ActionRegistry is IActions, Ownable {
             }
         }
 
-        return _runAction(_actions[id], targetState);
+        return _runAction(_actions[id], targetState, thisStatusID);
     }
 
     /*
      * @dev will run Action for given Action ID and state. Can be reverted if given ID is unknown or for given ID Action
      * with Unknown type is registered. Will returned changed state.
     */
-    function _runAction(Action memory action, States.FullState memory state) private view returns(Effects.ActionEffect memory effect, bool ok) {
+    function _runAction(
+        Action memory action,
+        States.FullState memory state,
+        uint256 thisStatusID
+    ) private view returns(Effects.ActionEffect memory effect, bool ok) {
         ok = true;
 
         if(action.actionType == Type.DAMAGE) {
@@ -134,7 +139,7 @@ contract ActionRegistry is IActions, Ownable {
         }
 
         if(action.actionType == Type.BURN_ALL_STATUSES) {
-            effect.burnAllStatuses = state.statuses;
+            effect.burnAllStatuses = _burnAllStatuses(state.statuses, thisStatusID);
             return (effect, ok);
         }
 
@@ -155,6 +160,23 @@ contract ActionRegistry is IActions, Ownable {
         }
 
         revert("Actions: action type cannot be unknown");
+    }
+
+    function _burnAllStatuses(
+        uint256[] memory statuses,
+        uint256 except
+    ) private pure returns(uint256[] memory) {
+        uint256[] memory returnStatuses = new uint256[](statuses.length - 1);
+
+        uint256 j;
+        for (uint256 i = 0; i < statuses.length; i++) {
+            if (statuses[i] != except) {
+                returnStatuses[j] = statuses[i];
+                j++;
+            }
+        }
+
+        return returnStatuses;
     }
 
     /*
