@@ -17,15 +17,15 @@ export function assertStatus(result: IStatuses.StatusStruct, target: IStatuses.S
     assertUintArray(result.onDestroyActions, target.onDestroyActions);
 }
 
-export function whaIsDeadMayNeverDie(actions: number[]): IStatuses.StatusStruct {
+export function whaIsDeadMayNeverDie(onDestroy: number[]): IStatuses.StatusStruct {
     return {
         id: 0,
         statusType: StatusType.DEATH_CHECK,
         turns: 100,
         name: "What is Dead May Never Die",
-        actions: actions,
+        actions: [],
         mutations: [],
-        onDestroyActions: []
+        onDestroyActions: onDestroy
     }
 }
 

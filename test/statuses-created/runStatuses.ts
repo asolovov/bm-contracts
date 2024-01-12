@@ -1098,7 +1098,7 @@ describe("Actions unit tests", function () {
             expect(res).to.be.equal(true);
         });
 
-        it.only("Purity", async function () {
+        it("Purity", async function () {
             const {actions, statuses, mutations} = await loadFixture(deployFixture);
 
             const selfState: States.FullStateStruct = {
@@ -1151,776 +1151,796 @@ describe("Actions unit tests", function () {
             assertMageStatus(selfStateRes, expectedState);
         });
 
-        // it("Retribution", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [1],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [0],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(burnSpellIfMaxHP);
-        //
-        //     await statuses.addStatus(retribution([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, retribution([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Humility", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 20,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 11,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await mutations.addMutation(setDamageToHP);
-        //
-        //     await statuses.addStatus(humility([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, humility([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Everything's Poison", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.HEALING,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await mutations.addMutation(healingToClassic);
-        //
-        //     await statuses.addStatus(everythingPoison([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, everythingPoison([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("From Generosity", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [1],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(ifMaxHPAddLightningClassicSpell(1));
-        //
-        //     await statuses.addStatus(fromGenerosity([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, fromGenerosity([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Regeneration", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 11,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(deal1Healing);
-        //
-        //     await statuses.addStatus(regeneration([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, regeneration([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Cool Aid", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 2,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await mutations.addMutation(decreaseDamage1IfDamageMoreThan1);
-        //
-        //     await statuses.addStatus(coolAid([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, coolAid([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Reflection", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: [1, 2, 3, 4, 5]
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await mutations.addMutation(blockStatuses);
-        //
-        //     await statuses.addStatus(reflection([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, reflection([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Gravemine", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState2: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 1,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(deal9Classic);
-        //
-        //     await statuses.addStatus(gravemine([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, gravemine([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        //
-        //     const selfStateRes2 =
-        //         await statuses.runOnDestroy(1, selfState, opponentState);
-        //
-        //     assertMageStatus(selfStateRes2, expectedState2);
-        // });
-        //
-        // it("Fear Feaster", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 11,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(deal1PiercingIfSkip);
-        //
-        //     await statuses.addStatus(fearFeaster([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, fearFeaster([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Decay and Rot", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [1],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [0],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(burnSpellIfSkip);
-        //
-        //     await statuses.addStatus(decayAndRot([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, decayAndRot([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Deep-seated Fears", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(skip50Chance);
-        //
-        //     await statuses.addStatus(deepSeatedFears([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, deepSeatedFears([1]), 1);
-        //
-        //     let res: boolean = false;
-        //     for (let i = 0; i < 10; i++) {
-        //         const [selfStateRes, spellStateRes] =
-        //             await statuses.runStatus(1, selfState, opponentState, spellState);
-        //         await mine();
-        //         assertSpellState(spellStateRes, expectedSpell);
-        //
-        //         res = res || selfStateRes.isPass;
-        //         if (res) {
-        //             break;
-        //         }
-        //
-        //         // assertMageStatus(selfStateRes, expectedState);
-        //     }
-        //
-        //     expect(res).to.be.equal(true);
-        // });
-        //
-        // it("Dark Matter", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 5,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 5,
-        //         shields: 12,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(deal2ShieldsIfHealthLessThan6);
-        //
-        //     await statuses.addStatus(darkMatter([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, darkMatter([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("Call of Cthulhu", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 12,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 11,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(deal1PiercingIfHealthMoreThan6);
-        //
-        //     await statuses.addStatus(callOfCthulhu([1]));
-        //     const s1 = await statuses.getStatus(1);
-        //     assertStatus(s1, callOfCthulhu([1]), 1);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(1, selfState, opponentState, spellState);
-        //     assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
-        //
-        // it("What is Dead May Never Die", async function () {
-        //     const {actions, statuses, mutations} = await loadFixture(deployFixture);
-        //
-        //     const selfState: MageState.FullStateStruct = {
-        //         health: 0,
-        //         shields: 0,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: true
-        //     }
-        //
-        //     const opponentState: MageState.FullStateStruct = {
-        //         health: 10,
-        //         shields: 10,
-        //         spells: [],
-        //         statuses: [],
-        //         isPass: false
-        //     }
-        //
-        //     const expectedState: MageState.FullStateStruct = {
-        //         health: 1,
-        //         shields: 0,
-        //         spells: [],
-        //         statuses: [1],
-        //         isPass: true
-        //     }
-        //
-        //     const spellState: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     const expectedSpell: SpellState.ShortMageEffectStruct = {
-        //         points: 3,
-        //         damage: DamageType.CLASSIC,
-        //         school: SchoolType.FIRE,
-        //         statuses: []
-        //     }
-        //
-        //     await actions.addAction(skip50Chance);
-        //     await statuses.addStatus(deepSeatedFears([1]));
-        //
-        //     await actions.addAction(addDeepSeatedFears(1));
-        //     await actions.addAction(deal1HealingIfDead);
-        //
-        //     await statuses.addStatus(whaIsDeadMayNeverDie([2, 3]));
-        //     const s1 = await statuses.getStatus(2);
-        //     assertStatus(s1, whaIsDeadMayNeverDie([2, 3]), 2);
-        //
-        //     const [selfStateRes, spellStateRes] =
-        //         await statuses.runStatus(2, selfState, opponentState, spellState);
-        //     // assertSpellState(spellStateRes, expectedSpell);
-        //     assertMageStatus(selfStateRes, expectedState);
-        // });
+        it("Retribution", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 12,
+                shields: 10,
+                spells: [1],
+                statuses: [1],
+                turns: [4],
+                isPass: false
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 12,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [4],
+                isPass: false
+            }
+
+            await actions.addAction(burnSpellIfMaxHP);
+
+            await statuses.addStatus(retribution([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, retribution([1]), 1);
+
+            const selfStateRes =
+                await statuses.runActiveStatuses(selfState, opponentState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+        });
+
+        it("Humility", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [3],
+                isPass: false
+            }
+
+            const spellState:  Effects.ActionEffectStruct = {
+                points: 3,
+                damageType: DamageType.PIERCING,
+                damageSchool: SchoolType.UNKNOWN,
+                setShields: false,
+                addStatus: 0,
+                burnStatus: 0,
+                changeStatus: false,
+                burnSpell: 0,
+                addSpell: 0,
+                burnAllStatuses: [],
+                skip: false,
+            }
+
+            const expectedSpell: Effects.ActionEffectStruct = {
+                points: 1,
+                damageType: DamageType.PIERCING,
+                damageSchool: SchoolType.UNKNOWN,
+                setShields: false,
+                addStatus: 0,
+                burnStatus: 0,
+                changeStatus: false,
+                burnSpell: 0,
+                addSpell: 0,
+                burnAllStatuses: [],
+                skip: false,
+            }
+
+            await mutations.addMutation(setDamageToHP);
+
+            await statuses.addStatus(humility([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, humility([1]), 1);
+
+            const spellStateRes =
+                await statuses.runPassiveStatuses(selfState, spellState);
+
+            assertSpellState(spellStateRes, expectedSpell);
+        });
+
+        it("Everything's Poison", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [3],
+                isPass: false
+            }
+
+            const spellState:  Effects.ActionEffectStruct = {
+                points: 3,
+                damageType: DamageType.HEALING,
+                damageSchool: SchoolType.UNKNOWN,
+                setShields: false,
+                addStatus: 0,
+                burnStatus: 0,
+                changeStatus: false,
+                burnSpell: 0,
+                addSpell: 0,
+                burnAllStatuses: [],
+                skip: false,
+            }
+
+            const expectedSpell: Effects.ActionEffectStruct = {
+                points: 3,
+                damageType: DamageType.CLASSIC,
+                damageSchool: SchoolType.UNKNOWN,
+                setShields: false,
+                addStatus: 0,
+                burnStatus: 0,
+                changeStatus: false,
+                burnSpell: 0,
+                addSpell: 0,
+                burnAllStatuses: [],
+                skip: false,
+            }
+
+
+            await mutations.addMutation(healingToClassic);
+
+            await statuses.addStatus(everythingPoison([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, everythingPoison([1]), 1);
+
+            const spellStateRes =
+                await statuses.runPassiveStatuses(selfState, spellState);
+
+            assertSpellState(spellStateRes, expectedSpell);
+        });
+
+        it("From Generosity", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 12,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [4],
+                isPass: false
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 12,
+                shields: 10,
+                spells: [1],
+                statuses: [1],
+                turns: [4],
+                isPass: false
+            }
+
+            await actions.addAction(ifMaxHPAddLightningClassicSpell(1));
+
+            await statuses.addStatus(fromGenerosity([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, fromGenerosity([1]), 1);
+
+            const selfStateRes =
+                await statuses.runActiveStatuses(selfState, opponentState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+        });
+
+        it("Regeneration", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [4],
+                isPass: false
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 11,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [4],
+                isPass: false
+            }
+
+            await actions.addAction(deal1Healing);
+
+            await statuses.addStatus(regeneration([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, regeneration([1]), 1);
+
+            const selfStateRes =
+                await statuses.runActiveStatuses(selfState, opponentState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+        });
+
+        it("Cool Aid", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [3],
+                isPass: false
+            }
+
+            const spellState:  Effects.ActionEffectStruct = {
+                points: 3,
+                damageType: DamageType.CLASSIC,
+                damageSchool: SchoolType.UNKNOWN,
+                setShields: false,
+                addStatus: 0,
+                burnStatus: 0,
+                changeStatus: false,
+                burnSpell: 0,
+                addSpell: 0,
+                burnAllStatuses: [],
+                skip: false,
+            }
+
+            const expectedSpell: Effects.ActionEffectStruct = {
+                points: 2,
+                damageType: DamageType.CLASSIC,
+                damageSchool: SchoolType.UNKNOWN,
+                setShields: false,
+                addStatus: 0,
+                burnStatus: 0,
+                changeStatus: false,
+                burnSpell: 0,
+                addSpell: 0,
+                burnAllStatuses: [],
+                skip: false,
+            }
+
+
+            await mutations.addMutation(decreaseDamage1IfDamageMoreThan1);
+
+            await statuses.addStatus(coolAid([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, coolAid([1]), 1);
+
+            const spellStateRes =
+                await statuses.runPassiveStatuses(selfState, spellState);
+
+            assertSpellState(spellStateRes, expectedSpell);
+        });
+
+        it("Reflection", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [3],
+                isPass: false
+            }
+
+            const spellState:  Effects.ActionEffectStruct = {
+                points: 3,
+                damageType: DamageType.CLASSIC,
+                damageSchool: SchoolType.UNKNOWN,
+                setShields: false,
+                addStatus: 1,
+                burnStatus: 2,
+                changeStatus: true,
+                burnSpell: 0,
+                addSpell: 0,
+                burnAllStatuses: [],
+                skip: false,
+            }
+
+            const expectedSpell: Effects.ActionEffectStruct = {
+                points: 3,
+                damageType: DamageType.CLASSIC,
+                damageSchool: SchoolType.UNKNOWN,
+                setShields: false,
+                addStatus: 0,
+                burnStatus: 0,
+                changeStatus: false,
+                burnSpell: 0,
+                addSpell: 0,
+                burnAllStatuses: [],
+                skip: false,
+            }
+
+            await mutations.addMutation(blockStatuses);
+
+            await statuses.addStatus(reflection([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, reflection([1]), 1);
+
+            const spellStateRes =
+                await statuses.runPassiveStatuses(selfState, spellState);
+
+            assertSpellState(spellStateRes, expectedSpell);
+        });
+
+        it("Gravemine", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: false
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: false
+            }
+
+            const expectedState2: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 1,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            await actions.addAction(deal9Classic);
+
+            await statuses.addStatus(gravemine([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, gravemine([1]), 1);
+
+            const selfStateRes =
+                await statuses.runActiveStatuses(selfState, opponentState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+
+            const selfStateRes2 =
+                await statuses.decreaseStatusTurns(selfState, 10);
+
+            assertMageStatus(selfStateRes2, expectedState2);
+        });
+
+        it("Fear Feaster", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: true
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 9,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: true
+            }
+
+            await actions.addAction(deal1PiercingIfSkip);
+
+            await statuses.addStatus(fearFeaster([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, fearFeaster([1]), 1);
+
+            const selfStateRes =
+                await statuses.runActiveStatuses(selfState, opponentState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+        });
+
+        it("Decay and Rot", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [1],
+                statuses: [1],
+                turns: [1],
+                isPass: true
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: true
+            }
+
+            await actions.addAction(burnSpellIfSkip);
+
+            await statuses.addStatus(decayAndRot([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, decayAndRot([1]), 1);
+
+            const selfStateRes =
+                await statuses.runActiveStatuses(selfState, opponentState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+        });
+
+        it("Deep-seated Fears", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: false
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: true
+            }
+
+            await actions.addAction(skip50Chance);
+
+            await statuses.addStatus(deepSeatedFears([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, deepSeatedFears([1]), 1);
+
+            let res: boolean = false;
+            for (let i = 0; i < 10; i++) {
+                const selfStateRes =
+                    await statuses.runActiveStatuses(selfState, opponentState, 3);
+                await mine();
+
+                res = res || selfStateRes.isPass;
+                if (res) {
+                    break;
+                }
+
+                // assertMageStatus(selfStateRes, expectedState);
+            }
+
+            expect(res).to.be.equal(true);
+        });
+
+        it("Dark Matter", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 5,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: false
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 5,
+                shields: 12,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: false
+            }
+
+
+            await actions.addAction(deal2ShieldsIfHealthLessThan6);
+
+            await statuses.addStatus(darkMatter([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, darkMatter([1]), 1);
+
+            const selfStateRes =
+                await statuses.runActiveStatuses(selfState, opponentState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+        });
+
+        it("Call of Cthulhu", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 7,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: false
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 6,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [1],
+                isPass: false
+            }
+
+            await actions.addAction(deal1PiercingIfHealthMoreThan6);
+
+            await statuses.addStatus(callOfCthulhu([1]));
+            const s1 = await statuses.getStatus(1);
+            assertStatus(s1, callOfCthulhu([1]), 1);
+
+            const selfStateRes =
+                await statuses.runActiveStatuses(selfState, opponentState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+        });
+
+        it.only("What is Dead May Never Die", async function () {
+            const {actions, statuses, mutations} = await loadFixture(deployFixture);
+
+            const selfState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 0,
+                shields: 10,
+                spells: [],
+                statuses: [2],
+                turns: [1],
+                isPass: false
+            }
+
+            const opponentState: States.FullStateStruct = {
+                id: 1,
+                name: "test2",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 10,
+                shields: 10,
+                spells: [],
+                statuses: [],
+                turns: [],
+                isPass: false
+            }
+
+            const expectedState: States.FullStateStruct = {
+                id: 1,
+                name: "test1",
+                race: 1,
+                school: SchoolType.FIRE,
+                health: 1,
+                shields: 10,
+                spells: [],
+                statuses: [1],
+                turns: [3],
+                isPass: false
+            }
+
+            await actions.addAction(skip50Chance);
+            await statuses.addStatus(deepSeatedFears([1]));
+
+            await actions.addAction(addDeepSeatedFears(1));
+            await actions.addAction(deal1HealingIfDead);
+
+            await statuses.addStatus(whaIsDeadMayNeverDie([2, 3]));
+            const s1 = await statuses.getStatus(2);
+            assertStatus(s1, whaIsDeadMayNeverDie([2, 3]), 2);
+
+            const [selfStateRes, spellStateRes] =
+                await statuses.runDeathCheckStatuses(selfState, 3);
+            assertMageStatus(selfStateRes, expectedState);
+        });
 
     });
 });

@@ -14,6 +14,8 @@ import {Damage} from "../../utils/Damage.sol";
 import {Target} from "../../utils/Target.sol";
 import {Effects} from "../../utils/Effects.sol";
 
+import "hardhat/console.sol";
+
 // StatusRegistry is an implementation for the IStatuses interface
 contract StatusRegistry is IStatuses, Ownable {
     // New status ID

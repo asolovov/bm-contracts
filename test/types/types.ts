@@ -3,7 +3,6 @@ export enum StatusType {
     UNKNOWN,
     BEFORE_SPELL,
     MUTATE_SPELL,
-    END_TURN,
     DEATH_CHECK
 }
 
