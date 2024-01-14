@@ -21,14 +21,18 @@ interface ISpells {
 
     function getSchoolSpells(School.Type school) external view returns(Spell[] memory);
 
+    function addSpell(Spell calldata spell) external;
+
     function runNextSpellSelf(
         States.FullState memory self,
-        States.FullState calldata opponent
+        States.FullState calldata opponent,
+        uint8 turn
     ) external view returns(States.FullState memory);
 
     function runNextSpellOpponent(
-        States.FullState calldata self,
-        States.FullState memory opponent
-    ) external view returns(States.FullState memory);
+        States.FullState memory self,
+        States.FullState memory opponent,
+        uint8 turn
+    ) external view returns(States.FullState memory, States.FullState memory);
 
 }

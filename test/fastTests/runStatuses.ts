@@ -34,7 +34,6 @@ import {
     toxicShock,
     waterShield, whaIsDeadMayNeverDie
 } from "../helpers/statusHelpers";
-import {MageState, SpellState} from "../../typechain-types/contracts/implementation/status/StatusRegistry";
 import {assertSpellState} from "../helpers/spellHelpers";
 import {assertMageStatus} from "../helpers/mageStatusHelpers";
 import {DamageType, SchoolType} from "../types/types";
@@ -60,7 +59,7 @@ import {
 } from "../helpers/actionHelpers";
 import {Effects, States} from "../../typechain-types/contracts/interfaces/IState";
 
-describe("Actions unit tests", function () {
+describe("Status tests", function () {
     async function deployFixture() {
         const [deployer] = await ethers.getSigners();
 
@@ -84,7 +83,7 @@ describe("Actions unit tests", function () {
         };
     }
 
-    describe("Quick tests", function () {
+    describe("Add and run tests", function () {
         it("Static Electricity", async function () {
             const {mutations, actions, statuses} = await loadFixture(deployFixture);
 

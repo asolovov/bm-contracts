@@ -87,7 +87,8 @@ contract ActionRegistry is IActions, Ownable {
         Target.Type target,
         States.FullState calldata self,
         States.FullState calldata opponent,
-        uint256 thisStatusID
+        uint256 thisStatusID,
+        bool schoolBoost
     ) external view returns (Effects.ActionEffect memory effect, bool ok) {
         States.FullState memory targetState;
         if (target == Target.Type.SELF) {
@@ -108,7 +109,7 @@ contract ActionRegistry is IActions, Ownable {
             }
         }
 
-        return _runAction(_actions[id], targetState, thisStatusID);
+        return _runAction(_actions[id], targetState, thisStatusID, schoolBoost);
     }
 
     /*
@@ -118,12 +119,17 @@ contract ActionRegistry is IActions, Ownable {
     function _runAction(
         Action memory action,
         States.FullState memory state,
-        uint256 thisStatusID
+        uint256 thisStatusID,
+        bool schoolBoost
     ) private view returns(Effects.ActionEffect memory effect, bool ok) {
         ok = true;
 
         if(action.actionType == Type.DAMAGE) {
-            return _runDamage(action);
+            (effect, ok) = _runDamage(action);
+            if (ok && schoolBoost) {
+                effect.points++;
+            }
+            return (effect, ok);
         }
 
         if(action.actionType == Type.ADD_STATUS) {

@@ -98,7 +98,8 @@ interface IActions {
         Target.Type target,
         States.FullState calldata self,
         States.FullState calldata opponent,
-        uint256 thisStatusID
+        uint256 thisStatusID,
+        bool schoolBoost
     ) external view returns (Effects.ActionEffect memory effect, bool ok);
 
 }

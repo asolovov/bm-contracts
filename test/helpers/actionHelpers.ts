@@ -27,6 +27,149 @@ export function assertAction(result: IActions.ActionStruct, target: IActions.Act
     }
 }
 
+export const shields0_2Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Increase shields 0-2 Air",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [0, 1, 2],
+    damage: DamageType.INCREASE_SHIELDS,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const heal0_2Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Heal 0-2 Air",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [0, 1, 2],
+    damage: DamageType.HEALING,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const shields5Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Shields +5 Air",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [5],
+    damage: DamageType.INCREASE_SHIELDS,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const breakShieldsAllAir: IActions.ActionStruct = {
+    id: 0,
+    description: "Break all shields",
+    actionType: ActionType.SET_SHIELDS,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [0],
+    damage: DamageType.UNKNOWN,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const piercing2Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Deal 2 piercing Air damage",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [2],
+    damage: DamageType.PIERCING,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const shields0Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Increase shields 0 Air",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [0],
+    damage: DamageType.INCREASE_SHIELDS,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const classicDamage0Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Deals 0 classic Air damage",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [0],
+    damage: DamageType.CLASSIC,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const classicDamage2_3Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Deals 2-3 classic Air damage",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [2, 3],
+    damage: DamageType.CLASSIC,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const classicDamage1_2Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Deals 1-2 classic damage",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [1, 2],
+    damage: DamageType.CLASSIC,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const classicDamage1Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Deals 1 classic Air damage",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [1],
+    damage: DamageType.CLASSIC,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
+export const classicDamage2Air: IActions.ActionStruct = {
+    id: 0,
+    description: "Deals 2 classic Air damage",
+    actionType: ActionType.DAMAGE,
+    selfChecks: [],
+    opponentChecks: [],
+    points: [2],
+    damage: DamageType.CLASSIC,
+    school: SchoolType.AIR,
+    statusID: 0,
+    spellID: 0
+}
+
 export const burnSpellIfMaxHP: IActions.ActionStruct = {
     id: 0,
     description: "Burn one spell if HP is max",
@@ -383,6 +526,95 @@ export function addDeepSeatedFears(statusID: number): IActions.ActionStruct {
                 chance: 0,
             }
         ],
+        opponentChecks: [],
+        points: [],
+        damage: DamageType.UNKNOWN,
+        school: SchoolType.UNKNOWN,
+        statusID: statusID,
+        spellID: 0
+    }
+}
+
+export function addDepletedAir(statusID: number): IActions.ActionStruct {
+    return {
+        id: 0,
+        description: "Add Depleted Air status",
+        actionType: ActionType.ADD_STATUS,
+        selfChecks: [],
+        opponentChecks: [],
+        points: [],
+        damage: DamageType.UNKNOWN,
+        school: SchoolType.UNKNOWN,
+        statusID: statusID,
+        spellID: 0
+    }
+}
+
+export function classic3AirIfStaticElStatus(statusID: number): IActions.ActionStruct {
+    return {
+        id: 0,
+        description: "Deal 3 classic Air damage if Static Electricity status present",
+        actionType: ActionType.DAMAGE,
+        selfChecks: [],
+        opponentChecks: [
+            {
+                checkType: ActionCheckType.STATUS,
+                points: 0,
+                statusID: statusID,
+                chance: 0,
+            }
+        ],
+        points: [3],
+        damage: DamageType.CLASSIC,
+        school: SchoolType.AIR,
+        statusID: 0,
+        spellID: 0
+    }
+}
+
+export function classic1AirIfNoStaticElStatus(statusID: number): IActions.ActionStruct {
+    return {
+        id: 0,
+        description: "Deal 1 classic Air damage if no Static Electricity status present",
+        actionType: ActionType.DAMAGE,
+        selfChecks: [],
+        opponentChecks: [
+            {
+                checkType: ActionCheckType.NO_STATUS,
+                points: 0,
+                statusID: statusID,
+                chance: 0,
+            }
+        ],
+        points: [1],
+        damage: DamageType.CLASSIC,
+        school: SchoolType.AIR,
+        statusID: 0,
+        spellID: 0
+    }
+}
+
+export function addStaticElectricity(statusID: number): IActions.ActionStruct {
+    return {
+        id: 0,
+        description: "Add Static Electricity status",
+        actionType: ActionType.ADD_STATUS,
+        selfChecks: [],
+        opponentChecks: [],
+        points: [],
+        damage: DamageType.UNKNOWN,
+        school: SchoolType.UNKNOWN,
+        statusID: statusID,
+        spellID: 0
+    }
+}
+
+export function addAirShield(statusID: number): IActions.ActionStruct {
+    return {
+        id: 0,
+        description: "Add Air Shield status",
+        actionType: ActionType.ADD_STATUS,
+        selfChecks: [],
         opponentChecks: [],
         points: [],
         damage: DamageType.UNKNOWN,

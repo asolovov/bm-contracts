@@ -1,7 +1,8 @@
-import {DamageType, SchoolType} from "../types/types";
 import {expect} from "chai";
 import {assertUintArray} from "./commonHelpers";
 import {Effects} from "../../typechain-types/contracts/interfaces/IState";
+import {ISpells} from "../../typechain-types";
+import {SchoolType} from "../types/types";
 
 export function assertSpellState(result: Effects.ActionEffectStruct, target: Effects.ActionEffectStruct) {
     expect(result.points, "points").to.be.equal(target.points);
@@ -19,16 +20,112 @@ export function assertSpellState(result: Effects.ActionEffectStruct, target: Eff
     assertUintArray(result.burnAllStatuses, target.burnAllStatuses);
 }
 
-export const blankActionEffect: Effects.ActionEffectStruct = {
-    points: 0,
-    damageType: DamageType.UNKNOWN,
-    damageSchool: SchoolType.UNKNOWN,
-    setShields: 0,
-    addStatus: 0,
-    burnStatus: 0,
-    changeStatus: false,
-    burnSpell: 0,
-    addSpell: 0,
-    burnAllStatuses: [],
-    skip: false,
+export function assertSpell(result: ISpells.SpellStruct, target: ISpells.SpellStruct) {
+    expect(result.id).to.be.equal(target.id);
+    expect(result.name).to.be.equal(target.name);
+    expect(result.school).to.be.equal(target.school);
+    expect(result.selfActions.length).to.be.equal(target.selfActions.length);
+    expect(result.opponentActions.length).to.be.equal(target.opponentActions.length);
+
+    assertUintArray(result.selfActions, target.selfActions);
+    assertUintArray(result.opponentActions, target.opponentActions);
+}
+
+export function megaVoltWunderwaffle(actionsOpponent: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Mega Volt Wunderwaffle",
+        school: SchoolType.AIR,
+        selfActions: [],
+        opponentActions: actionsOpponent
+    }
+}
+
+export function powerSurge(actionsOpponent: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Power Surge",
+        school: SchoolType.AIR,
+        selfActions: [],
+        opponentActions: actionsOpponent
+    }
+}
+
+export function blitzkriegByte(actionsOpponent: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Blitzkrieg Byte",
+        school: SchoolType.AIR,
+        selfActions: [],
+        opponentActions: actionsOpponent
+    }
+}
+
+export function teslasTrick(actionsSelf: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Tesla's Trick",
+        school: SchoolType.AIR,
+        selfActions: actionsSelf,
+        opponentActions: []
+    }
+}
+
+export function doubleTroubleThunder(actionsSelf: number[], actionsOpponent: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Double Trouble Thunder",
+        school: SchoolType.AIR,
+        selfActions: actionsSelf,
+        opponentActions: actionsOpponent
+    }
+}
+
+export function zephyrZipline(actionsOpponent: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Zephyr Zipline",
+        school: SchoolType.AIR,
+        selfActions: [],
+        opponentActions: actionsOpponent
+    }
+}
+
+export function aeroAssault(actionsSelf: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Aero Assault",
+        school: SchoolType.AIR,
+        selfActions: actionsSelf,
+        opponentActions: []
+    }
+}
+export function lightningClassic(actionsOpponent: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Lightning Classic",
+        school: SchoolType.AIR,
+        selfActions: [],
+        opponentActions: actionsOpponent
+    }
+}
+
+export function thunderstruckTwirl(actionsOpponent: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Thunderstruck Twirl",
+        school: SchoolType.AIR,
+        selfActions: [],
+        opponentActions: actionsOpponent
+    }
+}
+
+export function zeldasZigzag(actionsSelf: number[]): ISpells.SpellStruct {
+    return {
+        id: 0,
+        name: "Zelda's Zigzag",
+        school: SchoolType.AIR,
+        selfActions: actionsSelf,
+        opponentActions: []
+    }
 }

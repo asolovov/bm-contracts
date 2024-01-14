@@ -89,11 +89,11 @@ contract BattleRunner {
             return (winnerID, finish);
         }
 
-        owner = ISpells(_spellsRegistry).runNextSpellSelf(owner, opponent);
-        opponent = ISpells(_spellsRegistry).runNextSpellOpponent(opponent, owner);
+        owner = ISpells(_spellsRegistry).runNextSpellSelf(owner, opponent, turn);
+        (opponent, owner) = ISpells(_spellsRegistry).runNextSpellOpponent(owner, opponent, turn);
 
-        opponent = ISpells(_spellsRegistry).runNextSpellSelf(opponent, owner);
-        owner = ISpells(_spellsRegistry).runNextSpellOpponent(owner, opponent);
+        opponent = ISpells(_spellsRegistry).runNextSpellSelf(opponent, owner, turn);
+        (owner, opponent) = ISpells(_spellsRegistry).runNextSpellOpponent(opponent, owner, turn);
 
         (finish, winnerID, owner, opponent) = _checkDead(owner, opponent, turn);
         if (finish) {

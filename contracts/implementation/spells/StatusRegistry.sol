@@ -14,8 +14,6 @@ import {Damage} from "../../utils/Damage.sol";
 import {Target} from "../../utils/Target.sol";
 import {Effects} from "../../utils/Effects.sol";
 
-import "hardhat/console.sol";
-
 // StatusRegistry is an implementation for the IStatuses interface
 contract StatusRegistry is IStatuses, Ownable {
     // New status ID
@@ -79,7 +77,7 @@ contract StatusRegistry is IStatuses, Ownable {
 
                 for (uint256 a = 0; a < _statuses[self.statuses[s]].actions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[s]].actions[a], Target.Type.SELF, self, opponent, self.statuses[s]
+                        _statuses[self.statuses[s]].actions[a], Target.Type.SELF, self, opponent, self.statuses[s], false
                     );
 
                     if (ok) {
@@ -124,7 +122,7 @@ contract StatusRegistry is IStatuses, Ownable {
             if (_statuses[self.statuses[s]].statusType == Type.DEATH_CHECK) {
                 for (uint256 a = 0; a < _statuses[self.statuses[s]].onDestroyActions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[s]].onDestroyActions[a], Target.Type.SELF, self, self, self.statuses[s]
+                        _statuses[self.statuses[s]].onDestroyActions[a], Target.Type.SELF, self, self, self.statuses[s], false
                     );
 
                     if (ok) {
@@ -160,7 +158,7 @@ contract StatusRegistry is IStatuses, Ownable {
 
                 for (uint256 a = 0; a < _statuses[self.statuses[t]].onDestroyActions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[t]].onDestroyActions[a], Target.Type.SELF, self, self, self.statuses[t]
+                        _statuses[self.statuses[t]].onDestroyActions[a], Target.Type.SELF, self, self, self.statuses[t], false
                     );
 
                     if (ok) {
