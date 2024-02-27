@@ -1,13 +1,11 @@
-# Sample Hardhat Project
+# BM Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+## Getting started
 
-Try running some of the following tasks:
+### Clone
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+1. Clone the repository
+2. Install dependencies using `yarn install`
+3. Set the `.env` file in the project root using [.env.example](./.env.example) as reference
+4. Run compilation using `yarn compile`
+5. Run tests using `yarn test`
