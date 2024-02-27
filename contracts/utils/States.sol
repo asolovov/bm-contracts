@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import {School} from "./School.sol";
+import { School } from "./School.sol";
 
 library States {
     struct Mage {
@@ -26,7 +26,6 @@ library States {
         string name;
         uint256 race;
         School.Type school;
-
         uint8 health;
         uint8 shields;
         uint256[] spells;
@@ -40,7 +39,7 @@ library States {
         uint256[] calldata spells,
         uint8 health,
         uint8 shields
-    ) internal pure returns(FullState memory) {
+    ) internal pure returns (FullState memory) {
         FullState memory state;
 
         state.id = mage.id;

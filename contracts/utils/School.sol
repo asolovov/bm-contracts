@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-library  School {
+library School {
     enum Type {
         UNKNOWN,
         AIR,
@@ -13,5 +13,4 @@ library  School {
         DARK_STUDIES,
         ASTRAL_TECHNICS
     }
-
 }

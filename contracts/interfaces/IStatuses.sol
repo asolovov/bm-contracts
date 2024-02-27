@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import {Damage} from "../utils/Damage.sol";
-import {School} from "../utils/School.sol";
-import "../utils/States.sol";
-import "../utils/Effects.sol";
+import { Damage } from "../utils/Damage.sol";
+import { School } from "../utils/School.sol";
+import { Effects } from "../utils/Effects.sol";
+import { States } from "../utils/States.sol";
 
 // IStatuses is an Status module management contract. Status is a affecting Mage or Spell state each turn if checks are
 // passed. Status can be burned or blocked by other Status and will burn when its life turns count will end. Status
@@ -43,7 +43,7 @@ interface IStatuses {
     /*
      * GetStatuses is used to retrieve all registered statuses. Can be called by anyone.
      * @return Status array
-    */
+     */
     function getStatuses() external view returns (Status[] memory);
 
     /*
@@ -51,13 +51,13 @@ interface IStatuses {
      * struct if no status is registered for given id
      * @param id - Status ID
      * @return Status struct
-    */
+     */
     function getStatus(uint256 id) external view returns (Status memory);
 
     /*
      * AddStatus is used to add new status. Can be called only by contract owner or admin.
      * @param status - Status params to register
-    */
+     */
     function addStatus(Status calldata status) external;
 
     /*
@@ -68,7 +68,7 @@ interface IStatuses {
      * @param spell - Spell state
      * @return mutated self Mage state
      * @return mutated Spell state
-    */
+     */
 
     function runActiveStatuses(
         States.FullState memory self,
@@ -89,6 +89,5 @@ interface IStatuses {
     function decreaseStatusTurns(
         States.FullState memory self,
         uint8 turn
-) external view returns(States.FullState memory);
-
+    ) external view returns (States.FullState memory);
 }

@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.21;
 
-import "../utils/States.sol";
+import { States } from "../utils/States.sol";
 
 interface IRace {
-
     struct Race {
         uint256 id;
         string name;
@@ -14,16 +13,12 @@ interface IRace {
 
     function addRace(Race calldata race) external;
 
-    function getRace(uint256 id) external view returns(Race memory);
+    function getRace(uint256 id) external view returns (Race memory);
 
-    function getAllRaces() external view returns(Race[] memory);
+    function getAllRaces() external view returns (Race[] memory);
 
     function applyRaceEffects(
         States.FullState memory self,
         States.FullState memory opponent
-    ) external view returns(
-        States.FullState memory,
-        States.FullState memory
-    );
-
+    ) external view returns (States.FullState memory, States.FullState memory);
 }

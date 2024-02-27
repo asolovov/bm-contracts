@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import {Checks} from "../utils/Checks.sol";
-import {Damage} from "../utils/Damage.sol";
-import {School} from "../utils/School.sol";
-import "../utils/States.sol";
-import "../utils/Effects.sol";
+import { Checks } from "../utils/Checks.sol";
+import { Damage } from "../utils/Damage.sol";
+import { School } from "../utils/School.sol";
+import { Effects } from "../utils/Effects.sol";
+import { States } from "../utils/States.sol";
 
 // IMutations is an Mutations module management contract. Mutations module is used by Spell module. Running the
 // Passive Status means to run all its mutations. Mutation can be used by several Statuses. Mutation mutates
@@ -55,7 +55,7 @@ interface IMutations {
     /*
      * GetAllMutations is used to retrieve all registered mutations. Can be called by anyone.
      * @return Mutation array
-    */
+     */
     function getAllMutations() external view returns (Mutation[] memory);
 
     /*
@@ -63,13 +63,13 @@ interface IMutations {
      * if no action is registered for given id
      * @param id - Mutation ID
      * @return Mutation struct
-    */
+     */
     function getMutation(uint256 id) external view returns (Mutation memory);
 
     /*
      * AddMutation is used to add new mutation. Can be called only by contract owner or admin.
      * @param mutation - Mutation params to register
-    */
+     */
     function addMutation(Mutation memory mutation) external;
 
     /*
@@ -78,11 +78,10 @@ interface IMutations {
      * @param spellState - Spell state
      * @param mageState - Mage state
      * @return mutated Spell state
-    */
+     */
     function runMutation(
         uint256 id,
         Effects.ActionEffect memory spellState,
         States.FullState calldata mageState
     ) external view returns (Effects.ActionEffect memory);
-
 }

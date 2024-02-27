@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.12;
+pragma solidity ^0.8.21;
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-import {IStatuses} from "../../interfaces/IStatuses.sol";
-import {IState} from "../../interfaces/IState.sol";
-import {IActions} from "../../interfaces/IActions.sol";
-import {IMutations} from "../../interfaces/IMutations.sol";
+import { IStatuses } from "../../interfaces/IStatuses.sol";
+import { IState } from "../../interfaces/IState.sol";
+import { IActions } from "../../interfaces/IActions.sol";
+import { IMutations } from "../../interfaces/IMutations.sol";
 
-import {States} from "../../utils/States.sol";
-import {School} from "../../utils/School.sol";
-import {Damage} from "../../utils/Damage.sol";
-import {Target} from "../../utils/Target.sol";
-import {Effects} from "../../utils/Effects.sol";
+import { States } from "../../utils/States.sol";
+import { School } from "../../utils/School.sol";
+import { Damage } from "../../utils/Damage.sol";
+import { Target } from "../../utils/Target.sol";
+import { Effects } from "../../utils/Effects.sol";
 
 // StatusRegistry is an implementation for the IStatuses interface
 contract StatusRegistry is IStatuses, Ownable {
@@ -30,7 +30,7 @@ contract StatusRegistry is IStatuses, Ownable {
 
     address private _state;
 
-    constructor(address actions, address mutations, address state) Ownable(msg.sender){
+    constructor(address actions, address mutations, address state) Ownable(msg.sender) {
         _nextID = 1;
         _actions = actions;
         _mutations = mutations;
@@ -39,7 +39,7 @@ contract StatusRegistry is IStatuses, Ownable {
 
     /*
      * See {IStatuses - getStatuses}
-    */
+     */
     function getStatuses() external view returns (Status[] memory statuses) {
         for (uint256 i = 0; i < _nextID; i++) {
             statuses[i] = _statuses[i];
@@ -50,14 +50,14 @@ contract StatusRegistry is IStatuses, Ownable {
 
     /*
      * See {IStatuses - getStatus}
-    */
+     */
     function getStatus(uint256 id) external view returns (Status memory) {
         return _statuses[id];
     }
 
     /*
      * See {IStatuses - addStatus}
-    */
+     */
     function addStatus(Status memory status) external onlyOwner {
         status.id = _nextID;
         _statuses[_nextID] = status;
@@ -69,15 +69,18 @@ contract StatusRegistry is IStatuses, Ownable {
         States.FullState calldata opponent,
         uint8 turn
     ) external view returns (States.FullState memory) {
-
         Effects.ActionEffect memory effect;
         bool ok;
         for (uint256 s = 0; s < self.statuses.length; s++) {
             if (_statuses[self.statuses[s]].statusType == Type.BEFORE_SPELL) {
-
                 for (uint256 a = 0; a < _statuses[self.statuses[s]].actions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[s]].actions[a], Target.Type.SELF, self, opponent, self.statuses[s], false
+                        _statuses[self.statuses[s]].actions[a],
+                        Target.Type.SELF,
+                        self,
+                        opponent,
+                        self.statuses[s],
+                        false
                     );
 
                     if (ok) {
@@ -88,7 +91,6 @@ contract StatusRegistry is IStatuses, Ownable {
                         break;
                     }
                 }
-
             }
         }
 
@@ -102,11 +104,14 @@ contract StatusRegistry is IStatuses, Ownable {
         for (uint256 s = 0; s < self.statuses.length; s++) {
             if (_statuses[self.statuses[s]].statusType == Type.MUTATE_SPELL) {
                 for (uint256 m = 0; m < _statuses[self.statuses[s]].mutations.length; m++) {
-                    spellEffect = IMutations(_mutations).runMutation(_statuses[self.statuses[s]].mutations[m], spellEffect, self);
+                    spellEffect = IMutations(_mutations).runMutation(
+                        _statuses[self.statuses[s]].mutations[m],
+                        spellEffect,
+                        self
+                    );
                 }
             }
         }
-
 
         return spellEffect;
     }
@@ -122,7 +127,12 @@ contract StatusRegistry is IStatuses, Ownable {
             if (_statuses[self.statuses[s]].statusType == Type.DEATH_CHECK) {
                 for (uint256 a = 0; a < _statuses[self.statuses[s]].onDestroyActions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[s]].onDestroyActions[a], Target.Type.SELF, self, self, self.statuses[s], false
+                        _statuses[self.statuses[s]].onDestroyActions[a],
+                        Target.Type.SELF,
+                        self,
+                        self,
+                        self.statuses[s],
+                        false
                     );
 
                     if (ok) {
@@ -158,14 +168,18 @@ contract StatusRegistry is IStatuses, Ownable {
 
                 for (uint256 a = 0; a < _statuses[self.statuses[t]].onDestroyActions.length; a++) {
                     (effect, ok) = IActions(_actions).runAction(
-                        _statuses[self.statuses[t]].onDestroyActions[a], Target.Type.SELF, self, self, self.statuses[t], false
+                        _statuses[self.statuses[t]].onDestroyActions[a],
+                        Target.Type.SELF,
+                        self,
+                        self,
+                        self.statuses[t],
+                        false
                     );
 
                     if (ok) {
                         self = IState(_state).applyActionEffects(effect, self, turn);
                     }
                 }
-
             }
         }
 
@@ -175,11 +189,13 @@ contract StatusRegistry is IStatuses, Ownable {
             }
         }
 
-
         return self;
     }
 
-    function _deleteStatus(States.FullState memory state, uint256 statusID) private pure returns (States.FullState memory) {
+    function _deleteStatus(
+        States.FullState memory state,
+        uint256 statusID
+    ) private pure returns (States.FullState memory) {
         uint256[] memory statuses = new uint256[](state.statuses.length - 1);
         uint8[] memory turns = new uint8[](state.turns.length - 1);
 

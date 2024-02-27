@@ -1,20 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import {IState} from "../../interfaces/IState.sol";
+import { IState } from "../../interfaces/IState.sol";
 
-import {Effects} from "../../utils/Effects.sol";
-import {States} from "../../utils/States.sol";
-import {Damage} from "../../utils/Damage.sol";
+import { Effects } from "../../utils/Effects.sol";
+import { States } from "../../utils/States.sol";
+import { Damage } from "../../utils/Damage.sol";
 
 contract StateStorage is IState {
-
     uint8 private _initialHeath;
     uint8 private _initialShields;
     uint8 private _maxShields;
     uint256 private _initialSpells;
 
-    constructor(){
+    constructor() {
         _initialHeath = 12;
         _initialShields = 0;
         _maxShields = 20;
@@ -58,7 +57,6 @@ contract StateStorage is IState {
         States.FullState memory state,
         uint8 turn
     ) external view returns (States.FullState memory) {
-
         if (effect.damageType != Damage.Type.UNKNOWN) {
             state = Damage._runDamage(state, effect, Damage.MaxValues(_initialHeath, _maxShields));
         }
@@ -183,5 +181,4 @@ contract StateStorage is IState {
 
         return newIDs;
     }
-
 }
