@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import {Checks} from "../utils/Checks.sol";
-import {Damage} from "../utils/Damage.sol";
-import {Target} from "../utils/Target.sol";
-import {School} from "../utils/School.sol";
-import {States} from "../utils/States.sol";
-import {Effects} from "../utils/Effects.sol";
+import { Checks } from "../utils/Checks.sol";
+import { Damage } from "../utils/Damage.sol";
+import { Target } from "../utils/Target.sol";
+import { School } from "../utils/School.sol";
+import { States } from "../utils/States.sol";
+import { Effects } from "../utils/Effects.sol";
 
 // IActions is an Actions module management contract. Actions module is used by Spell and Status modules. Running the
 // Spell or Status means to run all its actions. Action can be used by several Spells or Statuses. Action mutates
@@ -49,7 +49,6 @@ interface IActions {
         Checks.ActionCheck[] selfChecks;
         // Opponent Checks are used to check the opponent Mage state
         Checks.ActionCheck[] opponentChecks;
-
         // Points are used for the Damage or Set Shields actions. One of the points in the points array will be used
         // with equal chance
         uint8[] points;
@@ -57,10 +56,8 @@ interface IActions {
         Damage.Type damage;
         // School Type is used to run Damage Actions. Can be unknown for active status actions
         School.Type school;
-
         // Status ID is used for the Change Status action
         uint256 statusID;
-
         // Spell ID is used for the Add Spell action
         uint256 spellID;
     }
@@ -68,7 +65,7 @@ interface IActions {
     /*
      * GetAllActions is used to retrieve all registered actions. Can be called by anyone.
      * @return Action array
-    */
+     */
     function getAllActions() external view returns (Action[] memory);
 
     /*
@@ -76,13 +73,13 @@ interface IActions {
      * if no action is registered for given id
      * @param id - Action ID
      * @return Action struct
-    */
+     */
     function getAction(uint256 id) external view returns (Action memory);
 
     /*
      * AddAction is used to add new action. Can be called only by contract owner or admin.
      * @param action - Action params to register
-    */
+     */
     function addAction(Action memory action) external;
 
     /*
@@ -92,7 +89,7 @@ interface IActions {
      * @param self - self Mage state
      * @param opponent - opponent Mage state
      * @return target Mage state after action effects
-    */
+     */
     function runAction(
         uint256 id,
         Target.Type target,
@@ -101,5 +98,4 @@ interface IActions {
         uint256 thisStatusID,
         bool schoolBoost
     ) external view returns (Effects.ActionEffect memory effect, bool ok);
-
 }

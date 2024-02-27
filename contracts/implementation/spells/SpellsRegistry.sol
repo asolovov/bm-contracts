@@ -1,21 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-import {ISpells} from "../../interfaces/ISpells.sol";
-import {IActions} from "../../interfaces/IActions.sol";
-import {IStatuses} from "../../interfaces/IStatuses.sol";
-import {IState} from "../../interfaces/IState.sol";
+import { ISpells } from "../../interfaces/ISpells.sol";
+import { IActions } from "../../interfaces/IActions.sol";
+import { IStatuses } from "../../interfaces/IStatuses.sol";
+import { IState } from "../../interfaces/IState.sol";
 
-import {School} from "../../utils/School.sol";
-import {Target} from "../../utils/Target.sol";
-import {States} from "../../utils/States.sol";
-import {Effects} from "../../utils/Effects.sol";
+import { School } from "../../utils/School.sol";
+import { Target } from "../../utils/Target.sol";
+import { States } from "../../utils/States.sol";
+import { Effects } from "../../utils/Effects.sol";
 import "hardhat/console.sol";
 
 contract SpellsRegistry is ISpells, Ownable {
-
     uint256 private _nextID;
 
     address private _actions;
@@ -24,7 +23,7 @@ contract SpellsRegistry is ISpells, Ownable {
 
     mapping(uint256 => Spell) private _spells;
 
-    constructor(address actions, address statuses, address state)Ownable(msg.sender){
+    constructor(address actions, address statuses, address state) Ownable(msg.sender) {
         _nextID = 1;
         _actions = actions;
         _statuses = statuses;
@@ -65,7 +64,6 @@ contract SpellsRegistry is ISpells, Ownable {
         States.FullState calldata opponent,
         uint8 turn
     ) external view returns (States.FullState memory) {
-
         if (self.spells.length == 0) {
             return self;
         }
@@ -74,9 +72,7 @@ contract SpellsRegistry is ISpells, Ownable {
             Effects.ActionEffect memory effect;
             bool ok;
 
-            (effect, ok) = _runAction(
-                _spells[self.spells[0]].selfActions[i], Target.Type.SELF, self, opponent
-            );
+            (effect, ok) = _runAction(_spells[self.spells[0]].selfActions[i], Target.Type.SELF, self, opponent);
 
             if (ok) {
                 effect = IStatuses(_statuses).runPassiveStatuses(self, effect);
@@ -92,7 +88,7 @@ contract SpellsRegistry is ISpells, Ownable {
         States.FullState memory self,
         States.FullState memory opponent,
         uint8 turn
-    ) external view returns (States.FullState memory, States.FullState memory){
+    ) external view returns (States.FullState memory, States.FullState memory) {
         if (self.spells.length == 0) {
             return (opponent, self);
         }
@@ -101,9 +97,7 @@ contract SpellsRegistry is ISpells, Ownable {
             Effects.ActionEffect memory effect;
             bool ok;
 
-            (effect, ok) = _runAction(
-                _spells[self.spells[0]].opponentActions[i], Target.Type.OPPONENT, self, opponent
-            );
+            (effect, ok) = _runAction(_spells[self.spells[0]].opponentActions[i], Target.Type.OPPONENT, self, opponent);
 
             if (ok) {
                 effect = IStatuses(_statuses).runPassiveStatuses(opponent, effect);
@@ -122,20 +116,18 @@ contract SpellsRegistry is ISpells, Ownable {
         Target.Type target,
         States.FullState memory self,
         States.FullState memory opponent
-    ) private view returns(Effects.ActionEffect memory, bool) {
-        return IActions(_actions).runAction(
-            id, target, self, opponent, 0, self.school == _spells[self.spells[0]].school
-        );
+    ) private view returns (Effects.ActionEffect memory, bool) {
+        return
+            IActions(_actions).runAction(id, target, self, opponent, 0, self.school == _spells[self.spells[0]].school);
     }
 
-    function _burnSpell(uint256[] memory spells) private pure returns(uint256[] memory) {
+    function _burnSpell(uint256[] memory spells) private pure returns (uint256[] memory) {
         uint256[] memory newSpells = new uint256[](spells.length - 1);
 
         for (uint256 i = 1; i < spells.length; i++) {
-            newSpells[i-1] = spells[i];
+            newSpells[i - 1] = spells[i];
         }
 
         return newSpells;
     }
-
 }

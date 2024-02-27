@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.21;
 
-import {IMages} from "../interfaces/IMages.sol";
-import {IState} from "../interfaces/IState.sol";
-import {IRace} from "../interfaces/IRace.sol";
-import {IStatuses} from "../interfaces/IStatuses.sol";
-import {ISpells} from "../interfaces/ISpells.sol";
+import { IMages } from "../interfaces/IMages.sol";
+import { IState } from "../interfaces/IState.sol";
+import { IRace } from "../interfaces/IRace.sol";
+import { IStatuses } from "../interfaces/IStatuses.sol";
+import { ISpells } from "../interfaces/ISpells.sol";
 
-import {States} from "../utils/States.sol";
+import { States } from "../utils/States.sol";
 
 contract BattleRunner {
-
     address private _mageRegistry;
 
     address private _stateRegistry;
@@ -37,7 +36,7 @@ contract BattleRunner {
         address statusRegistry,
         address spellRegistry,
         uint8 maxTurns
-    ){
+    ) {
         _mageRegistry = mageRegistry;
         _stateRegistry = stateRegistry;
         _raceRegistry = raceRegistry;
@@ -119,12 +118,7 @@ contract BattleRunner {
         States.FullState memory owner,
         States.FullState memory opponent,
         uint8 turn
-    ) private view returns (
-        bool,
-        uint256,
-        States.FullState memory,
-        States.FullState memory
-    ) {
+    ) private view returns (bool, uint256, States.FullState memory, States.FullState memory) {
         bool ownerDead;
         bool opponentDead;
 
@@ -170,5 +164,4 @@ contract BattleRunner {
 
         return 0;
     }
-
 }
