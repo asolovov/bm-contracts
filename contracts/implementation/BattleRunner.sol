@@ -14,7 +14,7 @@ contract BattleRunner {
 
     address private _stateRegistry;
 
-    address private _raceRegistry;
+    // address private _raceRegistry;
 
     address private _statusRegistry;
 
@@ -32,14 +32,14 @@ contract BattleRunner {
     constructor(
         address mageRegistry,
         address stateRegistry,
-        address raceRegistry,
+        // address raceRegistry,
         address statusRegistry,
         address spellRegistry,
         uint8 maxTurns
     ) {
         _mageRegistry = mageRegistry;
         _stateRegistry = stateRegistry;
-        _raceRegistry = raceRegistry;
+        // _raceRegistry = raceRegistry;
         _statusRegistry = statusRegistry;
         _spellsRegistry = spellRegistry;
         _maxTurns = maxTurns;
@@ -60,8 +60,8 @@ contract BattleRunner {
             IState(_stateRegistry).initialShields()
         );
 
-        (owner, opponent) = IRace(_raceRegistry).applyRaceEffects(owner, opponent);
-        (owner, opponent) = IRace(_raceRegistry).applyRaceEffects(opponent, owner);
+        // (owner, opponent) = IRace(_raceRegistry).applyRaceEffects(owner, opponent);
+        // (owner, opponent) = IRace(_raceRegistry).applyRaceEffects(opponent, owner);
 
         bool finish = false;
         for (uint8 t = 1; t <= _maxTurns || !finish; t++) {
@@ -122,10 +122,11 @@ contract BattleRunner {
         bool ownerDead;
         bool opponentDead;
 
-        if (owner.health + opponent.health == 0) {
-            (owner, ownerDead) = IStatuses(_statusRegistry).runDeathCheckStatuses(owner, turn);
-            (opponent, opponentDead) = IStatuses(_statusRegistry).runDeathCheckStatuses(opponent, turn);
-        }
+        // Seems unnecessary, if both zero - will be checked again below
+        // if (owner.health + opponent.health == 0) {
+        //     (owner, ownerDead) = IStatuses(_statusRegistry).runDeathCheckStatuses(owner, turn);
+        //     (opponent, opponentDead) = IStatuses(_statusRegistry).runDeathCheckStatuses(opponent, turn);
+        // }
 
         if (owner.health == 0) {
             (owner, ownerDead) = IStatuses(_statusRegistry).runDeathCheckStatuses(owner, turn);

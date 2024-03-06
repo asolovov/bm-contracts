@@ -39,9 +39,7 @@ library States {
         uint256[] calldata spells,
         uint8 health,
         uint8 shields
-    ) internal pure returns (FullState memory) {
-        FullState memory state;
-
+    ) internal pure returns (FullState memory state) {
         state.id = mage.id;
         state.name = mage.name;
         state.race = mage.race;

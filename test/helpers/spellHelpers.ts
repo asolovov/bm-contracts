@@ -20,8 +20,8 @@ export function assertSpellState(result: Effects.ActionEffectStruct, target: Eff
   assertUintArray(result.burnAllStatuses, target.burnAllStatuses);
 }
 
-export function assertSpell(result: ISpells.SpellStruct, target: ISpells.SpellStruct) {
-  expect(result.id).to.be.equal(target.id);
+export function assertSpell(result: ISpells.SpellStruct, target: ISpells.SpellStruct, id: number) {
+  expect(result.id).to.be.equal(id);
   expect(result.name).to.be.equal(target.name);
   expect(result.school).to.be.equal(target.school);
   expect(result.selfActions.length).to.be.equal(target.selfActions.length);

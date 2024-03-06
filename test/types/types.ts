@@ -60,7 +60,7 @@ export enum DamageType {
     UNKNOWN,
     CLASSIC,
     PIERCING,
-    SHIELD_BRAKING,
+    SHIELD_BREAKING,
     HEALING,
     INCREASE_SHIELDS
 }
