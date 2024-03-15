@@ -2,6 +2,7 @@ import { IMutations } from "../../typechain-types";
 import { DamageType, MutationCheckType, MutationType, SchoolType } from "../types/types";
 import { expect } from "chai";
 import { assertSpellChecks } from "./checksHelpers";
+import { StatusID } from "./IDs";
 
 export function assertMutation(result: IMutations.MutationStruct, target: IMutations.MutationStruct, id: number) {
   expect(result.id).to.be.equal(id);
@@ -139,10 +140,20 @@ export function getBlockBurnsMutation(statusID: number): IMutations.MutationStru
   };
 }
 
+export const blockBurnsMutation: IMutations.MutationStruct = {
+  id: 0,
+  description: "Protect against Burns status",
+  mutationType: MutationType.BLOCK_STATUS,
+  spellChecks: [],
+  mutateDamage: DamageType.UNKNOWN,
+  points: 0,
+  statusID: StatusID.burns, // add Burns status id
+};
+
 export function getBlockIgnitionMutation(statusID: number): IMutations.MutationStruct {
   return {
     id: 0,
-    description: "Protect against Burns status",
+    description: "Protect against Ignition status",
     mutationType: MutationType.BLOCK_STATUS,
     spellChecks: [],
     mutateDamage: DamageType.UNKNOWN,
@@ -150,6 +161,16 @@ export function getBlockIgnitionMutation(statusID: number): IMutations.MutationS
     statusID: statusID,
   };
 }
+
+export const blockIgnitionMutation: IMutations.MutationStruct = {
+  id: 0,
+  description: "Protect against Ignition status",
+  mutationType: MutationType.BLOCK_STATUS,
+  spellChecks: [],
+  mutateDamage: DamageType.UNKNOWN,
+  points: 0,
+  statusID: StatusID.ignition, // add Ignition status id
+};
 
 export const classicToHealingFire: IMutations.MutationStruct = {
   id: 0,
@@ -185,3 +206,30 @@ export const blockShieldDamage: IMutations.MutationStruct = {
   points: 0,
   statusID: 0,
 };
+
+export const blankMutation: IMutations.MutationStruct = {
+  id: 0,
+  description: "",
+  mutationType: MutationType.UNKNOWN,
+  spellChecks: [],
+  mutateDamage: DamageType.UNKNOWN,
+  points: 0,
+  statusID: 0,
+};
+
+// ------ACHTUNG!!!------
+// don`t edit this order. Add new only to the end of array and update enums
+
+export const mutations = [
+  blockStatuses,
+  decreaseDamage1IfDamageMoreThan1,
+  healingToClassic,
+  setDamageToHP,
+  increasePiercing,
+  blockPiercing,
+  classicToPiercing,
+  blockBurnsMutation,
+  blockIgnitionMutation,
+  classicToHealingFire,
+  blockShieldDamage,
+];

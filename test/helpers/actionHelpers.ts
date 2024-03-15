@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { assertActionChecks } from "./checksHelpers";
 import { ActionCheckType, ActionType, DamageType, SchoolType } from "../types/types";
 import { assertUintArray } from "./commonHelpers";
+import { SpellID, StatusID } from "./IDs";
 
 export function assertAction(result: IActions.ActionStruct, target: IActions.ActionStruct, id: number) {
   expect(result.id).to.be.equal(id);
@@ -217,7 +218,7 @@ export const decreaseShields1IfShieldsMore0: IActions.ActionStruct = {
   ],
   opponentChecks: [],
   points: [1],
-  damage: DamageType.SHIELD_BRAKING,
+  damage: DamageType.SHIELD_BREAKING,
   school: SchoolType.UNKNOWN,
   statusID: 0,
   spellID: 0,
@@ -271,7 +272,7 @@ export const skip30Chance: IActions.ActionStruct = {
 
 export const skip50Chance: IActions.ActionStruct = {
   id: 0,
-  description: "30% chance to skip turn",
+  description: "50% chance to skip turn",
   actionType: ActionType.SKIP_TURN,
   selfChecks: [
     {
@@ -461,7 +462,7 @@ export const deal2Piercing: IActions.ActionStruct = {
   spellID: 0,
 };
 
-export function getAddBurnsAction(statusID: number): IActions.ActionStruct {
+export function getAddBurnsStatus(statusID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "Inflicts Burn status",
@@ -476,7 +477,20 @@ export function getAddBurnsAction(statusID: number): IActions.ActionStruct {
   };
 }
 
-export function getChangeStatusToIgnitionAction(statusID: number): IActions.ActionStruct {
+export const addBurnsStatus: IActions.ActionStruct = {
+  id: 0,
+  description: "Inflicts Burn status",
+  actionType: ActionType.ADD_STATUS,
+  selfChecks: [],
+  opponentChecks: [],
+  points: [],
+  damage: DamageType.UNKNOWN,
+  school: SchoolType.UNKNOWN,
+  statusID: StatusID.burns, // add burn status id
+  spellID: 0,
+};
+
+export function getChangeStatusToIgnition(statusID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "Change random status to Ignition",
@@ -491,7 +505,20 @@ export function getChangeStatusToIgnitionAction(statusID: number): IActions.Acti
   };
 }
 
-export function ifMaxHPAddLightningClassicSpell(spellID: number): IActions.ActionStruct {
+export const changeStatusToIgnition: IActions.ActionStruct = {
+  id: 0,
+  description: "Change random status to Ignition",
+  actionType: ActionType.CHANGE_STATUS,
+  selfChecks: [],
+  opponentChecks: [],
+  points: [],
+  damage: DamageType.UNKNOWN,
+  school: SchoolType.UNKNOWN,
+  statusID: StatusID.ignition, // add Ignition status id
+  spellID: 0,
+};
+
+export function getIfMaxHPAddLightningClassicSpell(spellID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "If HP is max add Lightning Classic spell",
@@ -513,7 +540,27 @@ export function ifMaxHPAddLightningClassicSpell(spellID: number): IActions.Actio
   };
 }
 
-export function addDeepSeatedFears(statusID: number): IActions.ActionStruct {
+export const ifMaxHPAddLightningClassicSpell: IActions.ActionStruct = {
+  id: 0,
+  description: "If HP is max add Lightning Classic spell",
+  actionType: ActionType.ADD_SPELL,
+  selfChecks: [
+    {
+      checkType: ActionCheckType.HEALTH_MORE,
+      points: 11,
+      statusID: 0,
+      chance: 0,
+    },
+  ],
+  opponentChecks: [],
+  points: [],
+  damage: DamageType.UNKNOWN,
+  school: SchoolType.UNKNOWN,
+  statusID: 0,
+  spellID: SpellID.lightningClassic, // add Lightning Classic spell id
+};
+
+export function getAddDeepSeatedFears(statusID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "Add Deep-seated Fears if dead",
@@ -535,7 +582,27 @@ export function addDeepSeatedFears(statusID: number): IActions.ActionStruct {
   };
 }
 
-export function addDepletedAir(statusID: number): IActions.ActionStruct {
+export const addDeepSeatedFears: IActions.ActionStruct = {
+  id: 0,
+  description: "Add Deep-seated Fears if dead",
+  actionType: ActionType.ADD_STATUS,
+  selfChecks: [
+    {
+      checkType: ActionCheckType.HEALTH_LESS,
+      points: 1,
+      statusID: 0,
+      chance: 0,
+    },
+  ],
+  opponentChecks: [],
+  points: [],
+  damage: DamageType.UNKNOWN,
+  school: SchoolType.UNKNOWN,
+  statusID: StatusID.deepSeatedFears, // add Deep-seated Fears status id
+  spellID: 0,
+};
+
+export function getAddDepletedAir(statusID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "Add Depleted Air status",
@@ -550,7 +617,20 @@ export function addDepletedAir(statusID: number): IActions.ActionStruct {
   };
 }
 
-export function classic3AirIfStaticElStatus(statusID: number): IActions.ActionStruct {
+export const addDepletedAir: IActions.ActionStruct = {
+  id: 0,
+  description: "Add Depleted Air status",
+  actionType: ActionType.ADD_STATUS,
+  selfChecks: [],
+  opponentChecks: [],
+  points: [],
+  damage: DamageType.UNKNOWN,
+  school: SchoolType.UNKNOWN,
+  statusID: StatusID.depletedAir, // add Depleted Air status id
+  spellID: 0,
+};
+
+export function getClassic3AirIfStaticElStatus(statusID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "Deal 3 classic Air damage if Static Electricity status present",
@@ -572,7 +652,27 @@ export function classic3AirIfStaticElStatus(statusID: number): IActions.ActionSt
   };
 }
 
-export function classic1AirIfNoStaticElStatus(statusID: number): IActions.ActionStruct {
+export const classic3AirIfStaticElStatus: IActions.ActionStruct = {
+  id: 0,
+  description: "Deal 3 classic Air damage if Static Electricity status present",
+  actionType: ActionType.DAMAGE,
+  selfChecks: [],
+  opponentChecks: [
+    {
+      checkType: ActionCheckType.STATUS,
+      points: 0,
+      statusID: StatusID.staticElectricity, // add Static Electricity status id
+      chance: 0,
+    },
+  ],
+  points: [3],
+  damage: DamageType.CLASSIC,
+  school: SchoolType.AIR,
+  statusID: 0,
+  spellID: 0,
+};
+
+export function getClassic1AirIfNoStaticElStatus(statusID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "Deal 1 classic Air damage if no Static Electricity status present",
@@ -594,7 +694,27 @@ export function classic1AirIfNoStaticElStatus(statusID: number): IActions.Action
   };
 }
 
-export function addStaticElectricity(statusID: number): IActions.ActionStruct {
+export const classic1AirIfNoStaticElStatus: IActions.ActionStruct = {
+  id: 0,
+  description: "Deal 1 classic Air damage if no Static Electricity status present",
+  actionType: ActionType.DAMAGE,
+  selfChecks: [],
+  opponentChecks: [
+    {
+      checkType: ActionCheckType.NO_STATUS,
+      points: 0,
+      statusID: StatusID.staticElectricity, // add Static Electricity status id
+      chance: 0,
+    },
+  ],
+  points: [1],
+  damage: DamageType.CLASSIC,
+  school: SchoolType.AIR,
+  statusID: 0,
+  spellID: 0,
+};
+
+export function getAddStaticElectricity(statusID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "Add Static Electricity status",
@@ -609,7 +729,20 @@ export function addStaticElectricity(statusID: number): IActions.ActionStruct {
   };
 }
 
-export function addAirShield(statusID: number): IActions.ActionStruct {
+export const addStaticElectricity: IActions.ActionStruct = {
+  id: 0,
+  description: "Add Static Electricity status",
+  actionType: ActionType.ADD_STATUS,
+  selfChecks: [],
+  opponentChecks: [],
+  points: [],
+  damage: DamageType.UNKNOWN,
+  school: SchoolType.UNKNOWN,
+  statusID: StatusID.staticElectricity, // add Static Electricity status id
+  spellID: 0,
+};
+
+export function getAddAirShield(statusID: number): IActions.ActionStruct {
   return {
     id: 0,
     description: "Add Air Shield status",
@@ -623,3 +756,72 @@ export function addAirShield(statusID: number): IActions.ActionStruct {
     spellID: 0,
   };
 }
+
+export const addAirShield: IActions.ActionStruct = {
+  id: 0,
+  description: "Add Air Shield status",
+  actionType: ActionType.ADD_STATUS,
+  selfChecks: [],
+  opponentChecks: [],
+  points: [],
+  damage: DamageType.UNKNOWN,
+  school: SchoolType.UNKNOWN,
+  statusID: StatusID.airShield,
+  spellID: 0,
+};
+
+export const blankAction: IActions.ActionStruct = {
+  id: 0,
+  description: "",
+  actionType: ActionType.UNKNOWN,
+  selfChecks: [],
+  opponentChecks: [],
+  points: [],
+  damage: DamageType.UNKNOWN,
+  school: SchoolType.UNKNOWN,
+  statusID: 0,
+  spellID: 0,
+};
+
+// ------ACHTUNG!!!------
+// don`t edit this order. Add new only to the end of array and update enums
+
+export const actions = [
+  shields0_2Air,
+  heal0_2Air,
+  shields5Air,
+  breakShieldsAllAir,
+  piercing2Air,
+  shields0Air,
+  classicDamage0Air,
+  classicDamage2_3Air,
+  classicDamage1_2Air,
+  classicDamage1Air,
+  classicDamage2Air,
+  burnSpellIfMaxHP,
+  burnAllStatuses,
+  decreaseShields1IfShieldsMore0,
+  deal1IncreaseShields,
+  skipTurn,
+  skip30Chance,
+  skip50Chance,
+  deal2ShieldsIfHealthLessThan6,
+  deal9Classic,
+  deal1Healing,
+  deal1HealingIfDead,
+  deal1ClassicIfShields0,
+  deal1PiercingIfSkip,
+  deal1PiercingIfHealthMoreThan6,
+  burnSpellIfSkip,
+  deal1Piercing,
+  deal2Piercing,
+  addBurnsStatus,
+  changeStatusToIgnition,
+  ifMaxHPAddLightningClassicSpell,
+  addDeepSeatedFears,
+  addDepletedAir,
+  classic3AirIfStaticElStatus,
+  classic1AirIfNoStaticElStatus,
+  addStaticElectricity,
+  addAirShield,
+];

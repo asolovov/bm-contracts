@@ -172,6 +172,8 @@ library Checks {
         return false;
     }
 
+    // Two same funcs. Possible to use !func()
+
     /*
      * @dev _checkStatus is used to check if given statusID is not in the given statuses
      */

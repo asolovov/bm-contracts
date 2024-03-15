@@ -41,8 +41,10 @@ contract StatusRegistry is IStatuses, Ownable {
      * See {IStatuses - getStatuses}
      */
     function getStatuses() external view returns (Status[] memory statuses) {
-        for (uint256 i = 0; i < _nextID; i++) {
-            statuses[i] = _statuses[i];
+        statuses = new Status[](_nextID - 1);
+
+        for (uint256 i = 0; i < _nextID - 1; i++) {
+            statuses[i] = _statuses[i + 1];
         }
 
         return statuses;
@@ -58,9 +60,9 @@ contract StatusRegistry is IStatuses, Ownable {
     /*
      * See {IStatuses - addStatus}
      */
-    function addStatus(Status memory status) external onlyOwner {
-        status.id = _nextID;
+    function addStatus(Status calldata status) external onlyOwner {
         _statuses[_nextID] = status;
+        _statuses[_nextID].id = _nextID;
         _nextID++;
     }
 
@@ -136,7 +138,7 @@ contract StatusRegistry is IStatuses, Ownable {
                     );
 
                     if (ok) {
-                        self = IState(_state).applyActionEffects(effect, self, turn);
+                        self = IState(_state).applyActionEffects(effect, self, turn); // Deep-seated fears should be applied on opponent
                     }
                 }
 

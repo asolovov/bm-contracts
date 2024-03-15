@@ -27,8 +27,9 @@ contract MutationRegistry is IMutations, Ownable {
      * See {IMutations - getAllMutations}
      */
     function getAllMutations() external view returns (Mutation[] memory mutations) {
-        for (uint256 i = 0; i < _nextID; i++) {
-            mutations[i] = _mutations[i];
+        mutations = new Mutation[](_nextID - 1);
+        for (uint256 i = 0; i < _nextID - 1; i++) {
+            mutations[i] = _mutations[i + 1];
         }
 
         return mutations;
@@ -45,114 +46,101 @@ contract MutationRegistry is IMutations, Ownable {
      * See {IMutations - addMutation}
      * @dev adding Mutation to _mutations storage and increase _nextID var. Can be called only by the contract owner
      */
-    function addMutation(Mutation memory mutation) external onlyOwner {
-        Mutation storage m = _mutations[_nextID];
-        m.id = _nextID;
-        m.description = mutation.description;
-        m.mutationType = mutation.mutationType;
-
-        m.mutateDamage = mutation.mutateDamage;
-        m.points = mutation.points;
-        m.statusID = mutation.statusID;
-
-        Checks.MutationCheck[] storage spell = m.spellChecks;
-        for (uint256 i = 0; i < mutation.spellChecks.length; i++) {
-            spell.push(mutation.spellChecks[i]);
-        }
-
-        m.spellChecks = spell;
-
+    function addMutation(Mutation calldata mutation) external onlyOwner {
+        _mutations[_nextID] = mutation;
+        _mutations[_nextID].id = _nextID;
         _nextID++;
     }
 
     /*
      * See {IMutations - runMutation}
-     * @dev first will run checks for spell state. If all checks are ok will call _runMutation method for
-     * spell state
+     * @dev first will run checks for effect. If all checks are ok will call _runMutation method for
+     * effect
      */
     function runMutation(
         uint256 id,
-        Effects.ActionEffect memory spellState,
-        States.FullState calldata mageState
+        Effects.ActionEffect memory effect,
+        States.FullState calldata state
     ) external view returns (Effects.ActionEffect memory) {
         for (uint256 i = 0; i < _mutations[id].spellChecks.length; i++) {
-            if (!Checks._runMutationCheck(mageState, spellState, _mutations[id].spellChecks[i])) {
-                return spellState;
+            if (!Checks._runMutationCheck(state, effect, _mutations[id].spellChecks[i])) {
+                return effect;
             }
         }
 
-        return _runMutation(_mutations[id], spellState, mageState);
+        return _runMutation(_mutations[id], effect, state);
     }
 
     /*
-     * @dev will run Mutation for given Mutation ID and state. Will returned changed state.
+     * @dev will run Mutation for given effect and state. Will returned changed effect.
      */
+    // Should use early return, to avoid all  unnecessary comparisons
     function _runMutation(
         Mutation memory mutation,
-        Effects.ActionEffect memory spellState,
-        States.FullState calldata mageState
+        Effects.ActionEffect memory effect,
+        States.FullState calldata state
     ) private pure returns (Effects.ActionEffect memory) {
         if (mutation.mutationType == Type.INCREASE_DAMAGE) {
-            spellState.points += mutation.points;
+            effect.points += mutation.points;
         }
 
         if (mutation.mutationType == Type.DECREASE_DAMAGE) {
-            if (spellState.points <= mutation.points) {
-                spellState.points = 0;
+            if (effect.points <= mutation.points) {
+                effect.points = 0;
             } else {
-                spellState.points -= mutation.points;
+                effect.points -= mutation.points;
             }
         }
 
         if (mutation.mutationType == Type.CHANGE_DAMAGE_TYPE) {
-            spellState.damageType = mutation.mutateDamage;
+            effect.damageType = mutation.mutateDamage;
         }
 
         if (mutation.mutationType == Type.SET_DAMAGE) {
-            spellState.points = mutation.points;
+            effect.points = mutation.points;
         }
 
         if (mutation.mutationType == Type.SET_DAMAGE_TO_HP) {
             if (
-                spellState.damageType == Damage.Type.PIERCING ||
-                (spellState.damageType == Damage.Type.CLASSIC && mageState.shields == 0)
+                effect.damageType == Damage.Type.PIERCING ||
+                (effect.damageType == Damage.Type.CLASSIC && state.shields == 0)
             ) {
-                spellState.points = mutation.points;
-            } else if (spellState.damageType == Damage.Type.CLASSIC && mageState.shields < spellState.points) {
-                spellState.points = mageState.shields + 1;
+                effect.points = mutation.points;
+            } else if (effect.damageType == Damage.Type.CLASSIC && state.shields < effect.points) {
+                effect.points = state.shields + 1;
             }
         }
 
         if (mutation.mutationType == Type.BLOCK_SHIELD_DAMAGE) {
             if (
-                mageState.shields > 0 &&
-                (spellState.damageType == Damage.Type.CLASSIC || spellState.damageType == Damage.Type.SHIELD_BRAKING)
+                state.shields > 0 &&
+                (effect.damageType == Damage.Type.CLASSIC || effect.damageType == Damage.Type.SHIELD_BREAKING)
             ) {
-                spellState.points = 0;
+                effect.points = 0;
             }
         }
 
         if (mutation.mutationType == Type.BLOCK_STATUS) {
-            if (spellState.addStatus == mutation.statusID) {
-                spellState = _blockStatus(spellState);
+            if (effect.addStatus == mutation.statusID) {
+                effect = _blockStatus(effect);
             }
         }
 
         if (mutation.mutationType == Type.BLOCK_ALL_STATUSES) {
-            spellState = _blockStatus(spellState);
+            effect = _blockStatus(effect);
         }
 
-        return spellState;
+        return effect;
     }
 
-    function _blockStatus(Effects.ActionEffect memory spellState) private pure returns (Effects.ActionEffect memory) {
-        spellState.addStatus = 0;
+    function _blockStatus(Effects.ActionEffect memory effect) private pure returns (Effects.ActionEffect memory) {
+        effect.addStatus = 0;
 
-        if (spellState.changeStatus) {
-            spellState.burnStatus = 0;
-            spellState.changeStatus = false;
+        if (effect.changeStatus) {
+            effect.burnStatus = 0;
+            effect.changeStatus = false;
         }
 
-        return spellState;
+        return effect;
     }
 }

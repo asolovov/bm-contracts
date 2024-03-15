@@ -31,8 +31,10 @@ contract SpellsRegistry is ISpells, Ownable {
     }
 
     function getSpells() external view returns (Spell[] memory spells) {
-        for (uint256 i = 1; i < _nextID; i++) {
-            spells[i] = _spells[i];
+        spells = new Spell[](_nextID - 1);
+
+        for (uint256 i = 0; i < _nextID - 1; i++) {
+            spells[i] = _spells[i + 1];
         }
 
         return spells;
@@ -44,11 +46,18 @@ contract SpellsRegistry is ISpells, Ownable {
 
     function getSchoolSpells(School.Type school) external view returns (Spell[] memory spells) {
         uint256 j;
+        uint256[] memory temp = new uint256[](_nextID);
         for (uint256 i = 1; i < _nextID; i++) {
             if (_spells[i].school == school) {
-                spells[j] = _spells[i];
+                temp[j] = i;
                 j++;
             }
+        }
+
+        spells = new Spell[](j);
+
+        for (uint256 i = 0; i < j; i++) {
+            spells[i] = _spells[temp[i]];
         }
 
         return spells;
@@ -56,6 +65,7 @@ contract SpellsRegistry is ISpells, Ownable {
 
     function addSpell(Spell calldata spell) external onlyOwner {
         _spells[_nextID] = spell;
+        _spells[_nextID].id = _nextID;
         _nextID++;
     }
 

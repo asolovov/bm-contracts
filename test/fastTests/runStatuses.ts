@@ -48,13 +48,13 @@ import {
   stunning,
   toxicShock,
   waterShield,
-  whaIsDeadMayNeverDie,
+  whatIsDeadMayNeverDie,
 } from "../helpers/statusHelpers";
 import { assertSpellState } from "../helpers/spellHelpers";
 import { assertMageStatus } from "../helpers/mageStatusHelpers";
 import { DamageType, SchoolType } from "../types/types";
 import {
-  addDeepSeatedFears,
+  getAddDeepSeatedFears,
   assertAction,
   burnAllStatuses,
   burnSpellIfMaxHP,
@@ -70,9 +70,9 @@ import {
   deal2ShieldsIfHealthLessThan6,
   deal9Classic,
   decreaseShields1IfShieldsMore0,
-  getAddBurnsAction,
-  getChangeStatusToIgnitionAction,
-  ifMaxHPAddLightningClassicSpell,
+  getAddBurnsStatus,
+  getChangeStatusToIgnition,
+  getIfMaxHPAddLightningClassicSpell,
   skip30Chance,
   skip50Chance,
   skipTurn,
@@ -405,9 +405,9 @@ describe("Status tests", function () {
       const act1 = await actions.getAction(2);
       assertAction(act1, deal2Piercing, 2);
 
-      await actions.addAction(getAddBurnsAction(1));
+      await actions.addAction(getAddBurnsStatus(1));
       const act2 = await actions.getAction(3);
-      assertAction(act2, getAddBurnsAction(1), 3);
+      assertAction(act2, getAddBurnsStatus(1), 3);
 
       await statuses.addStatus(getIgnition([2], [3]));
       const s1 = await statuses.getStatus(2);
@@ -470,7 +470,7 @@ describe("Status tests", function () {
       await statuses.addStatus(getBurns([1]));
 
       await actions.addAction(deal2Piercing);
-      await actions.addAction(getAddBurnsAction(1));
+      await actions.addAction(getAddBurnsStatus(1));
       await statuses.addStatus(getIgnition([2], [3]));
 
       await mutations.addMutation(getBlockBurnsMutation(1));
@@ -536,12 +536,12 @@ describe("Status tests", function () {
       await statuses.addStatus(getBurns([1]));
 
       await actions.addAction(deal2Piercing);
-      await actions.addAction(getAddBurnsAction(1));
+      await actions.addAction(getAddBurnsStatus(1));
       await statuses.addStatus(getIgnition([2], [3]));
 
-      await actions.addAction(getChangeStatusToIgnitionAction(2));
+      await actions.addAction(getChangeStatusToIgnition(2));
       const act1 = await actions.getAction(4);
-      assertAction(act1, getChangeStatusToIgnitionAction(2), 4);
+      assertAction(act1, getChangeStatusToIgnition(2), 4);
 
       await statuses.addStatus(getFireAcolyte([4]));
       const s1 = await statuses.getStatus(3);
@@ -944,7 +944,7 @@ describe("Status tests", function () {
 
       const spellState: Effects.ActionEffectStruct = {
         points: 3,
-        damageType: DamageType.SHIELD_BRAKING,
+        damageType: DamageType.SHIELD_BREAKING,
         damageSchool: SchoolType.UNKNOWN,
         setShields: false,
         addStatus: 0,
@@ -958,7 +958,7 @@ describe("Status tests", function () {
 
       const expectedSpell: Effects.ActionEffectStruct = {
         points: 0,
-        damageType: DamageType.SHIELD_BRAKING,
+        damageType: DamageType.SHIELD_BREAKING,
         damageSchool: SchoolType.UNKNOWN,
         setShields: false,
         addStatus: 0,
@@ -1354,7 +1354,7 @@ describe("Status tests", function () {
         isPass: false,
       };
 
-      await actions.addAction(ifMaxHPAddLightningClassicSpell(1));
+      await actions.addAction(getIfMaxHPAddLightningClassicSpell(1));
 
       await statuses.addStatus(fromGenerosity([1]));
       const s1 = await statuses.getStatus(1);
@@ -1912,12 +1912,12 @@ describe("Status tests", function () {
       await actions.addAction(skip50Chance);
       await statuses.addStatus(deepSeatedFears([1]));
 
-      await actions.addAction(addDeepSeatedFears(1));
+      await actions.addAction(getAddDeepSeatedFears(1));
       await actions.addAction(deal1HealingIfDead);
 
-      await statuses.addStatus(whaIsDeadMayNeverDie([2, 3]));
+      await statuses.addStatus(whatIsDeadMayNeverDie([2, 3]));
       const s1 = await statuses.getStatus(2);
-      assertStatus(s1, whaIsDeadMayNeverDie([2, 3]), 2);
+      assertStatus(s1, whatIsDeadMayNeverDie([2, 3]), 2);
 
       const [selfStateRes, spellStateRes] = await statuses.runDeathCheckStatuses(selfState, 3);
       assertMageStatus(selfStateRes, expectedState);

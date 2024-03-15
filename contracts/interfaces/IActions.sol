@@ -63,10 +63,10 @@ interface IActions {
     }
 
     /*
-     * GetAllActions is used to retrieve all registered actions. Can be called by anyone.
+     * GetActions is used to retrieve all registered actions. Can be called by anyone.
      * @return Action array
      */
-    function getAllActions() external view returns (Action[] memory);
+    function getActions() external view returns (Action[] memory);
 
     /*
      * GetAction is used to retrieve action for given id. Can be called by anyone. Can return blank Action struct

@@ -14,6 +14,11 @@ import {
   classicDamage1Air,
   classicDamage2_3Air,
   classicDamage2Air,
+  getAddAirShield,
+  getAddDepletedAir,
+  getAddStaticElectricity,
+  getClassic1AirIfNoStaticElStatus,
+  getClassic3AirIfStaticElStatus,
   heal0_2Air,
   piercing2Air,
   shields0_2Air,
@@ -65,7 +70,7 @@ describe("Spells tests", function () {
     };
   }
 
-  describe.only("Add and run spells", function () {
+  describe("Add and run spells", function () {
     describe("Air spells", function () {
       it("Mega Volt Wunderwaffle", async function () {
         const { mutations, actions, statuses, spells } = await loadFixture(deployFixture);
@@ -126,11 +131,11 @@ describe("Spells tests", function () {
         await statuses.addStatus(getStaticElectricity([1]));
 
         await actions.addAction(classicDamage2Air);
-        await actions.addAction(addStaticElectricity(1));
+        await actions.addAction(getAddStaticElectricity(1));
 
         await spells.addSpell(megaVoltWunderwaffle([1, 2]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, megaVoltWunderwaffle([1, 2]));
+        assertSpell(spell, megaVoltWunderwaffle([1, 2]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatus(resSelf, selfState);
@@ -199,11 +204,11 @@ describe("Spells tests", function () {
         await statuses.addStatus(getDepletedAir([1]));
 
         await actions.addAction(classicDamage1_2Air);
-        await actions.addAction(addDepletedAir(1));
+        await actions.addAction(getAddDepletedAir(1));
 
         await spells.addSpell(powerSurge([1, 2]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, powerSurge([1, 2]));
+        assertSpell(spell, powerSurge([1, 2]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatus(resSelf, selfState);
@@ -268,12 +273,12 @@ describe("Spells tests", function () {
           isPass: false,
         };
 
-        await actions.addAction(classic3AirIfStaticElStatus(1));
-        await actions.addAction(classic1AirIfNoStaticElStatus(1));
+        await actions.addAction(getClassic3AirIfStaticElStatus(1));
+        await actions.addAction(getClassic1AirIfNoStaticElStatus(1));
 
         await spells.addSpell(blitzkriegByte([1, 2]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, blitzkriegByte([1, 2]));
+        assertSpell(spell, blitzkriegByte([1, 2]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatus(resSelf, selfState);
@@ -343,7 +348,7 @@ describe("Spells tests", function () {
 
         await spells.addSpell(teslasTrick([1, 2]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, teslasTrick([1, 2]));
+        assertSpell(spell, teslasTrick([1, 2]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatusApr(resSelf, selfStateExpect, 2, 2);
@@ -422,11 +427,11 @@ describe("Spells tests", function () {
         };
 
         await actions.addAction(classicDamage2_3Air);
-        await actions.addAction(addStaticElectricity(1));
+        await actions.addAction(getAddStaticElectricity(1));
 
         await spells.addSpell(doubleTroubleThunder([2], [1, 2]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, doubleTroubleThunder([2], [1, 2]));
+        assertSpell(spell, doubleTroubleThunder([2], [1, 2]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatusApr(resSelf, selfStateExpect, 2, 2);
@@ -505,12 +510,12 @@ describe("Spells tests", function () {
         };
 
         await actions.addAction(classicDamage0Air);
-        await actions.addAction(addStaticElectricity(1));
-        await actions.addAction(addDepletedAir(2));
+        await actions.addAction(getAddStaticElectricity(1));
+        await actions.addAction(getAddDepletedAir(2));
 
         await spells.addSpell(zephyrZipline([1, 2, 3]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, zephyrZipline([1, 2, 3]));
+        assertSpell(spell, zephyrZipline([1, 2, 3]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatus(resSelf, selfStateExpect);
@@ -589,11 +594,11 @@ describe("Spells tests", function () {
         };
 
         await actions.addAction(shields0Air);
-        await actions.addAction(addAirShield(1));
+        await actions.addAction(getAddAirShield(1));
 
         await spells.addSpell(aeroAssault([1, 2]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, aeroAssault([1, 2]));
+        assertSpell(spell, aeroAssault([1, 2]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatus(resSelf, selfStateExpect);
@@ -675,7 +680,7 @@ describe("Spells tests", function () {
 
         await spells.addSpell(lightningClassic([1]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, lightningClassic([1]));
+        assertSpell(spell, lightningClassic([1]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatus(resSelf, selfStateExpect);
@@ -758,7 +763,7 @@ describe("Spells tests", function () {
 
         await spells.addSpell(thunderstruckTwirl([1, 2]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, thunderstruckTwirl([1, 2]));
+        assertSpell(spell, thunderstruckTwirl([1, 2]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatus(resSelf, selfStateExpect);
@@ -837,11 +842,11 @@ describe("Spells tests", function () {
         };
 
         await actions.addAction(shields5Air);
-        await actions.addAction(addDepletedAir(1));
+        await actions.addAction(getAddDepletedAir(1));
 
         await spells.addSpell(zeldasZigzag([1, 2]));
         const spell = await spells.getSpell(1);
-        assertSpell(spell, zeldasZigzag([1, 2]));
+        assertSpell(spell, zeldasZigzag([1, 2]), 1);
 
         const resSelf = await spells.runNextSpellSelf(selfState, opponentState, 3);
         assertMageStatus(resSelf, selfStateExpect);

@@ -15,7 +15,7 @@ interface IRace {
 
     function getRace(uint256 id) external view returns (Race memory);
 
-    function getAllRaces() external view returns (Race[] memory);
+    function getRaces() external view returns (Race[] memory);
 
     function applyRaceEffects(
         States.FullState memory self,

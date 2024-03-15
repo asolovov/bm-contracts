@@ -27,11 +27,13 @@ contract ActionRegistry is IActions, Ownable {
     }
 
     /*
-     * See {IActions - getAllActions}
+     * See {IActions - getActions}
      */
-    function getAllActions() external view returns (Action[] memory actions) {
-        for (uint256 i = 0; i < _nextID; i++) {
-            actions[i] = _actions[i];
+    function getActions() external view returns (Action[] memory actions) {
+        actions = new Action[](_nextID - 1);
+
+        for (uint256 i = 0; i < _nextID - 1; i++) {
+            actions[i] = _actions[i + 1];
         }
 
         return actions;
@@ -48,32 +50,9 @@ contract ActionRegistry is IActions, Ownable {
      * See {IActions - addAction}
      * @dev adding Action to _actions storage and increase _nextID var. Can be called only by the contract owner
      */
-    function addAction(Action memory action) external onlyOwner {
-        Action storage a = _actions[_nextID];
-
-        a.id = _nextID;
-        a.description = action.description;
-        a.actionType = action.actionType;
-
-        a.points = action.points;
-        a.damage = action.damage;
-        a.school = action.school;
-        a.statusID = action.statusID;
-        a.spellID = action.spellID;
-
-        Checks.ActionCheck[] storage self = a.selfChecks;
-        for (uint256 i = 0; i < action.selfChecks.length; i++) {
-            self.push(action.selfChecks[i]);
-        }
-
-        Checks.ActionCheck[] storage opponent = a.opponentChecks;
-        for (uint256 i = 0; i < action.opponentChecks.length; i++) {
-            opponent.push(action.opponentChecks[i]);
-        }
-
-        a.selfChecks = self;
-        a.opponentChecks = opponent;
-
+    function addAction(Action calldata action) external onlyOwner {
+        _actions[_nextID] = action;
+        _actions[_nextID].id = _nextID;
         _nextID++;
     }
 

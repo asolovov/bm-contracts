@@ -106,6 +106,7 @@ contract StateStorage is IState {
             if (statuses[i] != idToRemove) {
                 newIDs[l] = statuses[i];
                 newTurns[l] = turns[i];
+                l++;
             }
         }
 
